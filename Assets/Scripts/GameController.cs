@@ -2,24 +2,23 @@
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-
-	public bool simulateWithMouse;
+	
+	public bool simulateWithKeyboard;
+	public float playerZDistanceFromCamera;
 
 	private GameObject player;
+	private GameObject mainCam;
 
 	void Start()
 	{
 		player = GameObject.FindGameObjectWithTag ("Player");
+		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
+		player.transform.position = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 	}
 
 	void Update()
 	{
-		if (simulateWithMouse)
-		{
-			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-			Vector3 point = ray.GetPoint(10);
-			player.transform.position = point;
-		}
+
 	}
 
 }
