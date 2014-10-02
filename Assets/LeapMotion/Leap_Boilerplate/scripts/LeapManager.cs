@@ -281,5 +281,26 @@ public class LeapManager : MonoBehaviour {
 
 		return forwardHand;
 	}
+
+	/*
+	 * Get the backmost detected hand in the scene. 
+	 * Returns Leap.Hand.Invalid if no hands are being tracked.
+	 */
+	public Hand backHand()
+	{
+		float maxZ = float.MinValue;
+		Hand backHand = Hand.Invalid;
+		
+		foreach(Hand hand in _currentFrame.Hands)
+		{
+			if(hand.PalmPosition.z > maxZ)
+			{
+				maxZ = hand.PalmPosition.z;
+				backHand = hand;
+			}
+		}
+		
+		return backHand;
+	}
 	
 }
