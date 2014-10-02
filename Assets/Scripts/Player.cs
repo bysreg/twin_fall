@@ -6,10 +6,12 @@ public class Player : MonoBehaviour {
 	public float speed;
 
 	private GameController gameController;
+	private Rect bounds;
 
 	void Start()
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
+		bounds = gameController.bounds;
 	}
 
 	void Update()
@@ -42,6 +44,10 @@ public class Player : MonoBehaviour {
 			}
 			
 			transform.position += v * Time.deltaTime;
+
+			float x = Mathf.Clamp(transform.position.x, bounds.xMin, bounds.xMax);
+			float y = Mathf.Clamp(transform.position.y, bounds.yMin, bounds.yMax);
+			transform.position = new Vector3(x, y, transform.position.z);
 		}
 	}
 

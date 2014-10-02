@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour {
 	public bool simulateWithKeyboard;
 	public float playerZDistanceFromCamera;
 	public Vector3 corridorV;
+	public int lifes;
+	public Rect bounds;
 
 	private GameObject player;
 	private GameObject mainCam;
@@ -70,9 +72,17 @@ public class GameController : MonoBehaviour {
 
 	void UpdateCorridor()
 	{
-		foreach(GameObject corridor in activeCorridors)
+		for(int i=activeCorridors.Count -1; i >= 0; i--)
 		{
+			var corridor = activeCorridors[i];
 			corridor.transform.position += corridorV * Time.fixedDeltaTime; 
+			
+			//delete the corridor if it's not used anymore
+			if (corridor.transform.position.z < - 15)
+			{
+				activeCorridors.Remove(corridor);
+				Destroy(corridor);
+			}
 		}
 	}
 
@@ -108,5 +118,11 @@ public class GameController : MonoBehaviour {
 	public float GetNextCorrSpawnTime()
 	{
 		return nextCorrSpawnTime;
+	}
+
+	public void HitPlayer()
+	{
+		lifes--;
+		lifes = Mathf.Max(0, lifes);
 	}
 }
