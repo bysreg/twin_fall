@@ -10,10 +10,10 @@ public class GameController : MonoBehaviour {
 	public Vector3 corridorV;
 	public int lifes;
 	public Rect bounds;
+	public TextAsset spawnData;
 
 	private GameObject player;
 	private GameObject mainCam;
-	private StreamReader sr;
 
 	private GameObject[] corridors;
 	private List<GameObject> activeCorridors;
@@ -36,13 +36,17 @@ public class GameController : MonoBehaviour {
 		corrSpawnDatas = new List<CorridorSpawnData> ();
 		activeCorridors = new List<GameObject> ();
 
-		sr = new StreamReader (@"Assets\sound_beat.txt");
-		while(sr.Peek() >= 0)
+		string spawnDataContent = spawnData.text;
+		string[] lines = spawnDataContent.Split (new char[] {'\n'});
+		foreach(string line in lines)
 		{
-			string data;
+			if(line.Length == 0)
+			{
+				continue;
+			}
+
 			CorridorSpawnData corrSpawnData = new CorridorSpawnData();
-			data = sr.ReadLine();
-			corrSpawnData.time = float.Parse(data);
+			corrSpawnData.time = float.Parse(line);
 			corrSpawnDatas.Add(corrSpawnData);
 		}
 
