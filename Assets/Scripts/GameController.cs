@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour {
 	public TextAsset spawnData;
 
 	private GameObject player;
+	private GameObject player2;
 	private GameObject mainCam;
 
 	private GameObject[] corridors;
@@ -29,15 +30,22 @@ public class GameController : MonoBehaviour {
 
 	void Awake()
 	{
-		player = GameObject.FindGameObjectWithTag ("Player");
+		player = GameObject.Find("Player1");
+		player2 = GameObject.Find("Player2");
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
-		player.transform.position = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 		corridors = GameObject.FindGameObjectsWithTag ("Corridor");
 		corrSpawnDatas = new List<CorridorSpawnData> ();
 		activeCorridors = new List<GameObject> ();
 
+		player.transform.position = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
+		player2.transform.position = new Vector3 (mainCam.transform.position.x + 3, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
+
 		string spawnDataContent = spawnData.text;
 		string[] lines = spawnDataContent.Split (new char[] {'\n'});
+		float s = player.transform.position.z - corridors [0].transform.position.z;
+		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
+		print (deltaTime);
+
 		foreach(string line in lines)
 		{
 			if(line.Length == 0)
@@ -46,7 +54,7 @@ public class GameController : MonoBehaviour {
 			}
 
 			CorridorSpawnData corrSpawnData = new CorridorSpawnData();
-			corrSpawnData.time = float.Parse(line);
+			corrSpawnData.time = float.Parse(line) - deltaTime;
 			corrSpawnDatas.Add(corrSpawnData);
 		}
 
