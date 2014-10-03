@@ -12,7 +12,7 @@ public class tests : MonoBehaviour {
 	private static Controller _leapController = new Controller();
 	private static Frame _currentFrame = Frame.Invalid;
 
-
+	private int oldHand1Id = 0, oldHand2Id = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -26,25 +26,37 @@ public class tests : MonoBehaviour {
 		if(_leapManager != null) { 
 			if(_leapManager.pointerAvailible)
 			{
-				Hand hand;
-				hand = _currentFrame.Hands[0];
-				if (hand != Hand.Invalid)
-				{
-					Finger pointer_finger = LeapManager.pointingFigner(hand);
-					Bob.transform.position = pointer_finger.TipPosition.ToUnityTranslated();
-				}
-				/*
-				foreach (Hand hand in _currentFrame.Hands)
-				{
-					Finger pointer_finger = LeapManager.pointingFigner(hand);
-					Bob.transform.position = pointer_finger.TipPosition.ToUnityTranslated();
-				}
-				*/
+				Hand hand1, hand2;
+				int hand1Id, hand2Id;
+				hand1Id = _currentFrame.Hands[0].Id;
+				hand2Id = _currentFrame.Hands[1].Id;
 
-				hand = _currentFrame.Hands[1];
-				if (hand != Hand.Invalid)
+
+				if (hand1Id == oldHand2Id || hand2Id == oldHand1Id)
 				{
-					Finger pointer_finger = LeapManager.pointingFigner(hand);
+					hand1 = _currentFrame.Hands[1];
+					hand2 = _currentFrame.Hands[0];
+
+				}
+				else
+				{
+					hand1 = _currentFrame.Hands[0];
+					hand2 = _currentFrame.Hands[1];
+
+					oldHand1Id = hand1Id;	//OldHand is updated only when the hands haven't swapped, because if they have,
+					oldHand2Id = hand2Id;	//we need to remember the actual orientation
+				}
+
+				if (hand1 != Hand.Invalid)
+				{
+					Finger pointer_finger = LeapManager.pointingFigner(hand1);
+					Bob.transform.position = pointer_finger.TipPosition.ToUnityTranslated();
+				}
+
+
+				if (hand2 != Hand.Invalid)
+				{
+					Finger pointer_finger = LeapManager.pointingFigner(hand2);
 					Pew.transform.position = pointer_finger.TipPosition.ToUnityTranslated();
 				}
 			}
