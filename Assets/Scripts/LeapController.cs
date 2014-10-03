@@ -54,15 +54,11 @@ public class LeapController : MonoBehaviour {
 					bobPosition = pointer_finger.TipPosition.ToUnityTranslated();
 				}
 
-
 				if (hand2 != Hand.Invalid)
 				{
 					Finger pointer_finger = LeapManager.pointingFigner(hand2);
 					pewPosition = pointer_finger.TipPosition.ToUnityTranslated();
 				}
-			}
-			else
-			{
 			}
 		}
 	}
