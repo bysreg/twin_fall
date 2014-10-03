@@ -25,7 +25,7 @@ public class Player : MonoBehaviour {
 		{
 			Vector3 v = Vector3.zero;
 
-			if (index == 0 && gameController.simulateWithKeyboard)
+			if (index == 0)
 			{
 				if(Input.GetKey(KeyCode.A))
 				{
@@ -51,7 +51,7 @@ public class Player : MonoBehaviour {
 					v.y = -speed;
 				}
 			}
-			else if(index == 1 && gameController.simulateWithKeyboard)
+			else if(index == 1)
 			{
 				if(Input.GetKey(KeyCode.LeftArrow))
 				{
@@ -76,18 +76,20 @@ public class Player : MonoBehaviour {
 					//down
 					v.y = -speed;
 				}
-
-				transform.position += v * Time.deltaTime;
 			}
-		}
 
-		if(index == 0)
-		{
-			transform.position = new Vector3(leapController.bobPosition.x, leapController.bobPosition.y, playerZPos);
+			transform.position += v * Time.deltaTime;
 		}
-		else if(index == 1)
+		else
 		{
-			transform.position = new Vector3(leapController.pewPosition.x, leapController.pewPosition.y, playerZPos);
+			if(index == 0)
+			{
+				transform.position = new Vector3(leapController.bobPosition.x, leapController.bobPosition.y, playerZPos);
+			}
+			else if(index == 1)
+			{
+				transform.position = new Vector3(leapController.pewPosition.x, leapController.pewPosition.y, playerZPos);
+			}
 		}
 		
 		float x = Mathf.Clamp(transform.position.x, bounds.xMin, bounds.xMax);
