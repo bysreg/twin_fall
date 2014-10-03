@@ -21,7 +21,7 @@ public class ColliderCheck : MonoBehaviour {
 
 	void Start()
 	{
-		passZ = gameController.GetPlayer1 ().transform.position.z - 1.5f;
+		passZ = gameController.GetPlayer1 ().transform.position.z - 0.1f;
 	}
 
 	void OnTriggerEnter(Collider other)
