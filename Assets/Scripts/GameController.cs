@@ -22,6 +22,9 @@ public class GameController : MonoBehaviour {
 	private int curCorrSpawnIndex;
 	private float time;
 	private float nextCorrSpawnTime;
+	private GameObject[] trunks;
+	private GameObject curTrunk;
+	private GameObject nextTrunk;
 
 	public class CorridorSpawnData
 	{
@@ -58,6 +61,12 @@ public class GameController : MonoBehaviour {
 		}
 
 		nextCorrSpawnTime = GetNextCorrSpawnData ().time;
+
+		trunks = new GameObject[2];
+		trunks[0] = GameObject.Find("/trunks/Trunk1");
+		trunks[1] = GameObject.Find("/trunks/Trunk2");
+		curTrunk = trunks[0];
+		nextTrunk = trunks[1];
 	}
 
 	void Update()
@@ -66,7 +75,9 @@ public class GameController : MonoBehaviour {
 
 		if(time >= nextCorrSpawnTime && curCorrSpawnIndex < corrSpawnDatas.Count)
 		{
-			activeCorridors.Add(SpawnCorridor(0));
+			int random = Random.Range(0, corridors.Length);
+			//print (random + " " + (corridors.Length));
+			activeCorridors.Add(SpawnCorridor(random));
 			curCorrSpawnIndex++;
 			CorridorSpawnData nextCorrSpawnData = GetNextCorrSpawnData();
 			if(nextCorrSpawnData != null)
@@ -74,6 +85,8 @@ public class GameController : MonoBehaviour {
 				nextCorrSpawnTime = GetNextCorrSpawnData().time;
 			}
 		}
+
+		UpdateTrunk();
 	}
 
 	void FixedUpdate()
@@ -97,9 +110,28 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	void UpdateTrunk()
+	{
+		for(int i=0;i < trunks.Length;i++)
+		{
+			trunks[i].transform.position += corridorV * Time.fixedDeltaTime;
+		}
+
+		for(int i=0;i < trunks.Length; i++)
+		{
+			if(trunks[i].transform.position.z < -64)
+			{
+				trunks[i].transform.position = trunks[(i + 1) % 2].transform.position + new Vector3(0, 0, 64.71f);
+
+				break;
+			}
+		}
+	}
+
 	GameObject SpawnCorridor(int type)
 	{
 		GameObject corr = Instantiate (corridors [type]) as GameObject;
+		corr.transform.position = new Vector3(0, 1, 50);
 		return corr;
 	}
 

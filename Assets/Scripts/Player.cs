@@ -95,6 +95,8 @@ public class Player : MonoBehaviour {
 		float x = Mathf.Clamp(transform.position.x, bounds.xMin, bounds.xMax);
 		float y = Mathf.Clamp(transform.position.y, bounds.yMin, bounds.yMax);
 		transform.position = new Vector3(x, y, transform.position.z);
+		//if(index == 0)
+//			print (transform.position);
 	}
 
 }
