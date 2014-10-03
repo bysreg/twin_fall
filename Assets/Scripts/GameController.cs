@@ -44,7 +44,6 @@ public class GameController : MonoBehaviour {
 		string[] lines = spawnDataContent.Split (new char[] {'\n'});
 		float s = player.transform.position.z - corridors [0].transform.position.z;
 		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
-		print (deltaTime);
 
 		foreach(string line in lines)
 		{
@@ -88,9 +87,9 @@ public class GameController : MonoBehaviour {
 		{
 			var corridor = activeCorridors[i];
 			corridor.transform.position += corridorV * Time.fixedDeltaTime; 
-			
+
 			//delete the corridor if it's not used anymore
-			if (corridor.transform.position.z < - 15)
+			if (corridor.transform.position.z < -10)
 			{
 				activeCorridors.Remove(corridor);
 				Destroy(corridor);
@@ -136,5 +135,15 @@ public class GameController : MonoBehaviour {
 	{
 		lifes--;
 		lifes = Mathf.Max(0, lifes);
+	}
+
+	public GameObject GetPlayer1()
+	{
+		return player;
+	}
+
+	public GameObject GetMainCam()
+	{
+		return mainCam;
 	}
 }
