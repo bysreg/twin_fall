@@ -3,8 +3,6 @@ using System.Collections;
 using Leap;
 
 public class LeapController : MonoBehaviour {
-	public GameObject Bob;
-	public GameObject Pew;
 
 	public Vector3 bobPosition;
 	public Vector3 pewPosition;
@@ -54,7 +52,6 @@ public class LeapController : MonoBehaviour {
 				{
 					Finger pointer_finger = LeapManager.pointingFigner(hand1);
 					bobPosition = pointer_finger.TipPosition.ToUnityTranslated();
-					bobPosition = new Vector3(Bob.transform.position.x, Bob.transform.position.y, 0);
 				}
 
 
@@ -62,7 +59,6 @@ public class LeapController : MonoBehaviour {
 				{
 					Finger pointer_finger = LeapManager.pointingFigner(hand2);
 					pewPosition = pointer_finger.TipPosition.ToUnityTranslated();
-					pewPosition = new Vector3(Pew.transform.position.x, Pew.transform.position.y, 0);
 				}
 			}
 			else
