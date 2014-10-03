@@ -18,7 +18,6 @@ public class Player : MonoBehaviour {
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
 		leapController = GameObject.Find ("LeapController").GetComponent<LeapController>();
-		bounds = gameController.bounds;
 		playerZPos = transform.position.z;
 		maxSqrRadius = maxRadius * maxRadius;
 		centerMovableArea = new Vector3(gameController.GetMainCam().transform.position.x, gameController.GetMainCam().transform.position.y, playerZPos);
@@ -96,24 +95,15 @@ public class Player : MonoBehaviour {
 				transform.position = new Vector3(leapController.pewPosition.x, leapController.pewPosition.y, playerZPos);
 			}
 		}
-		
-//		float x = Mathf.Clamp(transform.position.x, bounds.xMin, bounds.xMax);
-//		float y = Mathf.Clamp(transform.position.y, bounds.yMin, bounds.yMax);
-//		transform.position = new Vector3(x, y, transform.position.z);
 
 		//check radius
-		if(index == 0)
-			print ((transform.position - centerMovableArea).sqrMagnitude);
+//		if(index == 0)
+//			print ((transform.position - centerMovableArea).sqrMagnitude);
 		if((transform.position - centerMovableArea).sqrMagnitude > maxSqrRadius)
 		{
-			//Ray ray = new Ray(centerMovableArea, new Vector3(transform.position.x, transform.position.y, 0));
 			Ray ray = new Ray(centerMovableArea, transform.position - centerMovableArea);
-			Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
+			//Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
 			transform.position = ray.GetPoint(maxRadius);
 		}
-
-//		if(index == 0)
-//			print (transform.position);
 	}
-
 }
