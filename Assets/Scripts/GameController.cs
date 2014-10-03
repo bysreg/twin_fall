@@ -9,7 +9,6 @@ public class GameController : MonoBehaviour {
 	public float playerZDistanceFromCamera;
 	public Vector3 corridorV;
 	public int lifes;
-	public Rect bounds;
 	public TextAsset spawnData;
 
 	private GameObject player;
