@@ -51,6 +51,7 @@ public class tests : MonoBehaviour {
 				{
 					Finger pointer_finger = LeapManager.pointingFigner(hand1);
 					Bob.transform.position = pointer_finger.TipPosition.ToUnityTranslated();
+					Bob.transform.position = new Vector3(Bob.transform.position.x, Bob.transform.position.y, 0);
 				}
 
 
@@ -58,6 +59,7 @@ public class tests : MonoBehaviour {
 				{
 					Finger pointer_finger = LeapManager.pointingFigner(hand2);
 					Pew.transform.position = pointer_finger.TipPosition.ToUnityTranslated();
+					Pew.transform.position = new Vector3(Pew.transform.position.x, Pew.transform.position.y, 0);
 				}
 			}
 			else
