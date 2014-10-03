@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using Leap;
 
@@ -29,6 +29,7 @@ public class LeapController : MonoBehaviour {
 			{
 				Hand hand1, hand2;
 				int hand1Id, hand2Id;
+
 				hand1Id = _currentFrame.Hands[0].Id;
 				hand2Id = _currentFrame.Hands[1].Id;
 
