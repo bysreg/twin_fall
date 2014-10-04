@@ -20,6 +20,7 @@ public class CollectibleColliderCheck : MonoBehaviour {
 		{
 			AudioSource.PlayClipAtPoint (hitCollClip, other.gameObject.transform.position);
 			isHit = true;
+			gameController.IncComboCount();
 		}
 	}
 

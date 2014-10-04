@@ -9,6 +9,7 @@ public class HDebug : MonoBehaviour {
 	private GUIText nextSpawnTimeText;
 	private GUIText lifesText;
 	private GUIText nextFeatherHit;
+	private GUIText comboText;
 	private GameController gameController;
 	private List<GameController.CorridorSpawnData> corrSpawnDatas;
 
@@ -19,6 +20,7 @@ public class HDebug : MonoBehaviour {
 		nextSpawnTimeText = transform.FindChild ("NextSpawnTimeText").GetComponent<GUIText> ();
 		lifesText = transform.FindChild ("LifesText").GetComponent<GUIText> ();
 		nextFeatherHit = transform.FindChild ("NextFeatherHit").GetComponent<GUIText>();
+		comboText = transform.FindChild("ComboText").GetComponent<GUIText>();
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
 		corrSpawnDatas = gameController.GetCorrSpawnDatas ();
 	}
