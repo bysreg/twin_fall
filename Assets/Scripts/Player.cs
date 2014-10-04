@@ -17,6 +17,7 @@ public class Player : MonoBehaviour {
 	private Vector3 targetRevoDirection;
 	private float changeRevoTime = 4.0f;
 	private float revoTime;
+	private Transform model;
 	//private float revoVel;
 
 	void Start()
@@ -28,6 +29,8 @@ public class Player : MonoBehaviour {
 		centerMovableArea = new Vector3(gameController.GetMainCam().transform.position.x, gameController.GetMainCam().transform.position.y, playerZPos);
 		index = (name == "Bob" ? 0 : 1);
 		revoDirection = new Vector3(Random.Range(100, 200), Random.Range(100, 200), Random.Range(100, 200));
+
+		model = transform.GetChild(0);
 	}
 
 	void FixedUpdate()
@@ -128,6 +131,6 @@ public class Player : MonoBehaviour {
 			//revoVel = 0f;
 		}
 
-		transform.Rotate(revoDirection * Time.fixedDeltaTime);
+		model.Rotate(revoDirection * Time.fixedDeltaTime);
 	}
 }

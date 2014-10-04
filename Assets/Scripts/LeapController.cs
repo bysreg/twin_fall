@@ -14,6 +14,7 @@ public class LeapController : MonoBehaviour {
 	private static Frame _currentFrame = Frame.Invalid;
 
 	private int oldHand1Id = 0, oldHand2Id = 0;
+	private bool isCombined = false;
 
 	// Use this for initialization
 	void Start () {
@@ -59,6 +60,15 @@ public class LeapController : MonoBehaviour {
 				{
 					Finger pointer_finger = LeapManager.pointingFigner(hand2);
 					pewPosition = pointer_finger.TipPosition.ToUnityTranslated();
+				}
+
+				if (Vector3.Distance(bobPosition, pewPosition) < 1 && isCombined == false){
+					Debug.Log ("Combine!");
+					isCombined = true;
+				}
+				else if (Vector3.Distance(bobPosition, pewPosition) > 2 && isCombined == true){
+					Debug.Log ("Split");
+					isCombined = false;
 				}
 			}
 		}
