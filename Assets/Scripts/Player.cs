@@ -18,6 +18,9 @@ public class Player : MonoBehaviour {
 	private float changeRevoTime = 4.0f;
 	private float revoTime;
 	private Transform model;
+
+	private Animator animator;
+
 	//private float revoVel;
 
 	void Start()
@@ -31,6 +34,8 @@ public class Player : MonoBehaviour {
 		revoDirection = new Vector3(Random.Range(100, 200), Random.Range(100, 200), Random.Range(100, 200));
 
 		model = transform.GetChild(0);
+
+		animator = model.GetComponent<Animator>();
 	}
 
 	void FixedUpdate()
@@ -116,7 +121,27 @@ public class Player : MonoBehaviour {
 			transform.position = ray.GetPoint(maxRadius);
 		}
 
-		Revolute();
+		if (leapController.proximity > 2){
+			animator.SetBool("isCombined", false);
+			Revolute();
+		}
+		else{
+			animator.SetBool("isCombined", true);
+			RotateToCombine();
+		}
+	}
+
+	void RotateToCombine()
+	{
+		if (index == 0){
+			Quaternion newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (290, 270, 0), leapController.proximity-1);
+			Debug.Log (leapController.proximity-1);
+			model.rotation = newRotation;
+		}
+		else if (index == 1){
+			Quaternion newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (38, 94, 0), leapController.proximity-1);
+			model.rotation = newRotation;
+		}
 	}
 
 	void Revolute()
