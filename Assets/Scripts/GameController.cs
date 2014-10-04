@@ -9,7 +9,8 @@ public class GameController : MonoBehaviour {
 	public float playerZDistanceFromCamera;
 	public Vector3 corridorV;
 	public int lifes;
-	public TextAsset spawnData;
+	public TextAsset corrSpawnDataText;
+	public TextAsset collectiblesSpawnData;
 
 	private GameObject player;
 	private GameObject player2;
@@ -42,7 +43,7 @@ public class GameController : MonoBehaviour {
 		player.transform.position = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 		player2.transform.position = new Vector3 (mainCam.transform.position.x + 3, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 
-		string spawnDataContent = spawnData.text;
+		string spawnDataContent = corrSpawnDataText.text;
 		string[] lines = spawnDataContent.Split (new char[] {'\n'});
 		float s = player.transform.position.z - corridors [0].transform.position.z;
 		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
@@ -72,6 +73,18 @@ public class GameController : MonoBehaviour {
 	{
 		time += Time.deltaTime;
 
+		UpdateSpawnCorr();
+		UpdateSpawnCollectibles();
+	}
+
+	void FixedUpdate()
+	{
+		UpdateCorridor ();
+		UpdateTrunk();
+	}
+
+	void UpdateSpawnCorr()
+	{	
 		if(time >= nextCorrSpawnTime && curCorrSpawnIndex < corrSpawnDatas.Count)
 		{
 			int random = Random.Range(0, corridors.Length);
@@ -84,13 +97,11 @@ public class GameController : MonoBehaviour {
 				nextCorrSpawnTime = GetNextCorrSpawnData().time;
 			}
 		}
-
-		UpdateTrunk();
 	}
 
-	void FixedUpdate()
+	void UpdateSpawnCollectibles()
 	{
-		UpdateCorridor ();
+
 	}
 
 	void UpdateCorridor()
