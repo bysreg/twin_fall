@@ -4,15 +4,15 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	public float speed;
-	public int index;	
 
 	private GameController gameController;
 	private LeapController leapController;
 	private Rect bounds;
 	private float playerZPos;
 	private float maxSqrRadius;
-	private float maxRadius = 4;
+	private float maxRadius = 3.7f;
 	private Vector3 centerMovableArea;
+	private int index;
 
 	void Start()
 	{
@@ -21,6 +21,7 @@ public class Player : MonoBehaviour {
 		playerZPos = transform.position.z;
 		maxSqrRadius = maxRadius * maxRadius;
 		centerMovableArea = new Vector3(gameController.GetMainCam().transform.position.x, gameController.GetMainCam().transform.position.y, playerZPos);
+		index = (name == "Bob" ? 0 : 1);
 	}
 
 	void Update()
@@ -97,8 +98,8 @@ public class Player : MonoBehaviour {
 		}
 
 		//check radius
-//		if(index == 0)
-//			print ((transform.position - centerMovableArea).sqrMagnitude);
+		if(index == 0)
+			print ((transform.position - centerMovableArea).sqrMagnitude);
 		if((transform.position - centerMovableArea).sqrMagnitude > maxSqrRadius)
 		{
 			Ray ray = new Ray(centerMovableArea, transform.position - centerMovableArea);
