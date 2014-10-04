@@ -16,27 +16,35 @@ public class GameController : MonoBehaviour {
 	private GameObject player2;
 	private GameObject mainCam;
 
-	private GameObject[] corridors;
-	private List<GameObject> activeCorridors;
-	private List<CorridorSpawnData> corrSpawnDatas;
-	//fixme
-	//private List<
-	private int curCorrSpawnIndex;
 	private float time;
+	private GameObject[] corridors;
+	private GameObject[] collectibles;
+	private List<GameObject> activeCorridors;
+	private List<GameObject> activeColl;
+	private List<CorridorSpawnData> corrSpawnDatas;
+	private List<CollSpawnData> collSpawnDatas;
+	private int curCorrSpawnIndex;
+	private int curOldestCorrIndex;
+	private int curOldestCollIndex;
+	private int curCollSpawnIndex;
 	private float nextCorrSpawnTime;
+	private float nextCollSpawnTime;
+	private Vector2 nextCollSpawnPos;
 	private GameObject[] trunks;
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 
 	public class CorridorSpawnData
 	{
-		public float time;
+		public float spawnTime;
+		public float hitTime;
 	}
 
 	public class CollSpawnData
 	{
-		public float time;
-		//public Vector2
+		public float spawnTime;
+		public float hitTime;
+		public Vector2 position;
 	}
 
 	void Awake()
@@ -45,37 +53,17 @@ public class GameController : MonoBehaviour {
 		player2 = GameObject.Find("Pew");
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		corridors = GameObject.FindGameObjectsWithTag ("Corridor");
+		collectibles = GameObject.FindGameObjectsWithTag("Collectible");
 		corrSpawnDatas = new List<CorridorSpawnData> ();
+		collSpawnDatas = new List<CollSpawnData> ();
 		activeCorridors = new List<GameObject> ();
+		activeColl = new List<GameObject>();
 
 		player.transform.position = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 		player2.transform.position = new Vector3 (mainCam.transform.position.x + 3, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 
-		string spawnDataContent = corrSpawnDataText.text;
-		string[] lines = spawnDataContent.Split (new char[] {'\n'});
-		float s = player.transform.position.z - corridors [0].transform.position.z;
-		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
-
-		foreach(string line in lines)
-		{
-			if(line.Length == 0)
-			{
-				continue;
-			}
-
-			CorridorSpawnData corrSpawnData = new CorridorSpawnData();
-			corrSpawnData.time = float.Parse(line) - deltaTime;
-			corrSpawnDatas.Add(corrSpawnData);
-		}
-
-		nextCorrSpawnTime = GetNextCorrSpawnData ().time;
-
-		//fixme
-		//string collectiblesSpawnDataString = collectiblesSpawnDataText.text;
-		//string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
-
-		//fixme
-		//foreach
+		InitializeCorridorSpawnDatas();
+		InitializeCollectibleSpawnDatas();
 
 		trunks = new GameObject[2];
 		trunks[0] = GameObject.Find("/trunks_new/Trunk1");
@@ -83,9 +71,58 @@ public class GameController : MonoBehaviour {
 		curTrunk = trunks[0];
 		nextTrunk = trunks[1];
 	}
+	
+	void InitializeCollectibleSpawnDatas()
+	{
+		string collectiblesSpawnDataString = collectiblesSpawnDataText.text;
+		string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
+		float s = player.transform.position.z - corridors [0].transform.position.z;
+		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
 
-	//fixme
-	//void Initialize
+		foreach(string line in collLines)
+		{
+			if(line.Length == 0)
+			{
+				continue;
+			}
+
+			CollSpawnData collSpawnData = new CollSpawnData();
+			string[] splits = line.Split(new char[] {' '});
+			collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
+			collSpawnData.hitTime = float.Parse(splits[0]);
+			float x = float.Parse(splits[1]);
+			float y = float.Parse(splits[2]);
+			collSpawnData.position = new Vector2(x, y);
+
+			collSpawnDatas.Add(collSpawnData);
+		}
+
+		nextCollSpawnTime = GetNextCollSpawnData().spawnTime;
+		nextCollSpawnPos = GetNextCollSpawnData().position;
+	}
+
+	void InitializeCorridorSpawnDatas()
+	{
+		string spawnDataContent = corrSpawnDataText.text;
+		string[] lines = spawnDataContent.Split (new char[] {'\n'});
+		float s = player.transform.position.z - corridors [0].transform.position.z;
+		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
+		
+		foreach(string line in lines)
+		{
+			if(line.Length == 0)
+			{
+				continue;
+			}
+			
+			CorridorSpawnData corrSpawnData = new CorridorSpawnData();
+			corrSpawnData.spawnTime = float.Parse(line) - deltaTime;
+			corrSpawnData.hitTime = float.Parse(line);
+			corrSpawnDatas.Add(corrSpawnData);
+		}
+		
+		nextCorrSpawnTime = GetNextCorrSpawnData ().spawnTime;
+	}
 
 	void Update()
 	{
@@ -98,6 +135,7 @@ public class GameController : MonoBehaviour {
 	void FixedUpdate()
 	{
 		UpdateCorridor ();
+		UpdateCollectibles();
 		UpdateTrunk();
 	}
 
@@ -112,14 +150,24 @@ public class GameController : MonoBehaviour {
 			CorridorSpawnData nextCorrSpawnData = GetNextCorrSpawnData();
 			if(nextCorrSpawnData != null)
 			{
-				nextCorrSpawnTime = GetNextCorrSpawnData().time;
+				nextCorrSpawnTime = nextCorrSpawnData.spawnTime;
 			}
 		}
 	}
 
 	void UpdateSpawnCollectibles()
 	{
-
+		if(time >= nextCollSpawnTime && curCollSpawnIndex < collSpawnDatas.Count)
+		{
+			activeColl.Add(SpawnColl(nextCollSpawnPos.x, nextCollSpawnPos.y));
+			curCollSpawnIndex++;
+			CollSpawnData nextCollSpawnData = GetNextCollSpawnData();
+			if(nextCollSpawnData != null)
+			{
+				nextCollSpawnTime = nextCollSpawnData.spawnTime;
+				nextCollSpawnPos = nextCollSpawnData.position;
+			}
+		}
 	}
 
 	void UpdateCorridor()
@@ -133,7 +181,35 @@ public class GameController : MonoBehaviour {
 			if (corridor.transform.position.z < -10)
 			{
 				activeCorridors.Remove(corridor);
+				curOldestCorrIndex++;
 				Destroy(corridor);
+			}
+		}
+	}
+
+	void UpdateCollectibles()
+	{
+		for(int i=activeColl.Count - 1; i >= 0; i--)
+		{
+			var coll = activeColl[i];
+
+			if(coll.GetComponent<CollectibleColliderCheck>().IsHit())
+			{
+				activeColl.Remove(coll);
+				Destroy(coll);
+				curOldestCollIndex++;
+				continue;
+			}
+
+			coll.transform.position += corridorV * Time.fixedDeltaTime;
+
+			//delete the coll if it's not used anymore
+			if(coll.transform.position.z < -10)
+			{
+				activeColl.Remove(coll);
+				Destroy(coll);
+				curOldestCollIndex++;
+				continue;
 			}
 		}
 	}
@@ -163,6 +239,13 @@ public class GameController : MonoBehaviour {
 		return corr;
 	}
 
+	GameObject SpawnColl(float x, float y)
+	{
+		GameObject coll = Instantiate (collectibles[0]) as GameObject;
+		coll.transform.position = new Vector3(x, y, 50);
+		return coll;
+	}
+
 	public List<CorridorSpawnData> GetCorrSpawnDatas()
 	{
 		return corrSpawnDatas;
@@ -177,6 +260,14 @@ public class GameController : MonoBehaviour {
 	{
 		if(corrSpawnDatas.Count > curCorrSpawnIndex)
 			return corrSpawnDatas[curCorrSpawnIndex];
+
+		return null;
+	}
+
+	public CollSpawnData GetNextCollSpawnData()
+	{
+		if(collSpawnDatas.Count > curCollSpawnIndex)
+			return collSpawnDatas[curCollSpawnIndex];
 
 		return null;
 	}
@@ -205,5 +296,19 @@ public class GameController : MonoBehaviour {
 	public GameObject GetMainCam()
 	{
 		return mainCam;
+	}
+
+	public float GetCurOldestCorrHitTime()
+	{
+		if(curOldestCorrIndex < corrSpawnDatas.Count)
+			return corrSpawnDatas[curOldestCorrIndex].hitTime;
+		return 0;
+	}
+
+	public float GetCurOldestCollHitTime()
+	{
+		if(curOldestCollIndex < collSpawnDatas.Count)
+			return collSpawnDatas[curOldestCollIndex].hitTime;
+		return 0;
 	}
 }
