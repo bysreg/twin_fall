@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour {
 	public Vector3 corridorV;
 	public int lifes;
 	public TextAsset corrSpawnDataText;
-	public TextAsset collectiblesSpawnData;
+	public TextAsset collectiblesSpawnDataText;
 
 	private GameObject player;
 	private GameObject player2;
@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour {
 	private GameObject[] corridors;
 	private List<GameObject> activeCorridors;
 	private List<CorridorSpawnData> corrSpawnDatas;
+	//fixme
+	//private List<
 	private int curCorrSpawnIndex;
 	private float time;
 	private float nextCorrSpawnTime;
@@ -29,6 +31,12 @@ public class GameController : MonoBehaviour {
 	public class CorridorSpawnData
 	{
 		public float time;
+	}
+
+	public class CollSpawnData
+	{
+		public float time;
+		//public Vector2
 	}
 
 	void Awake()
@@ -62,12 +70,22 @@ public class GameController : MonoBehaviour {
 
 		nextCorrSpawnTime = GetNextCorrSpawnData ().time;
 
+		//fixme
+		//string collectiblesSpawnDataString = collectiblesSpawnDataText.text;
+		//string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
+
+		//fixme
+		//foreach
+
 		trunks = new GameObject[2];
 		trunks[0] = GameObject.Find("/trunks_new/Trunk1");
 		trunks[1] = GameObject.Find("/trunks_new/Trunk2");
 		curTrunk = trunks[0];
 		nextTrunk = trunks[1];
 	}
+
+	//fixme
+	//void Initialize
 
 	void Update()
 	{
