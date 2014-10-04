@@ -32,8 +32,8 @@ public class GameController : MonoBehaviour {
 
 	void Awake()
 	{
-		player = GameObject.Find("Player1");
-		player2 = GameObject.Find("Player2");
+		player = GameObject.Find("Bob");
+		player2 = GameObject.Find("Pew");
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		corridors = GameObject.FindGameObjectsWithTag ("Corridor");
 		corrSpawnDatas = new List<CorridorSpawnData> ();
