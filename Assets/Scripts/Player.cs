@@ -13,7 +13,11 @@ public class Player : MonoBehaviour {
 	private float maxRadius = 3.7f;
 	private Vector3 centerMovableArea;
 	private int index;
-	private 
+	private Vector3 revoDirection;
+	private Vector3 targetRevoDirection;
+	private float changeRevoTime = 4.0f;
+	private float revoTime;
+	//private float revoVel;
 
 	void Start()
 	{
@@ -23,6 +27,7 @@ public class Player : MonoBehaviour {
 		maxSqrRadius = maxRadius * maxRadius;
 		centerMovableArea = new Vector3(gameController.GetMainCam().transform.position.x, gameController.GetMainCam().transform.position.y, playerZPos);
 		index = (name == "Bob" ? 0 : 1);
+		revoDirection = new Vector3(Random.Range(100, 200), Random.Range(100, 200), Random.Range(100, 200));
 	}
 
 	void FixedUpdate()
@@ -84,7 +89,7 @@ public class Player : MonoBehaviour {
 				}
 			}
 
-			transform.position += v * Time.deltaTime;
+			transform.position += v * Time.fixedDeltaTime;
 		}
 		else
 		{
@@ -113,6 +118,16 @@ public class Player : MonoBehaviour {
 
 	void Revolute()
 	{
+		revoTime += Time.fixedDeltaTime;
 
+		if(revoTime >= changeRevoTime)
+		{
+			revoTime -= changeRevoTime;
+			targetRevoDirection = new Vector3(Random.Range(100, 200), Random.Range(100, 200), Random.Range(100, 200));
+			revoDirection = targetRevoDirection;
+			//revoVel = 0f;
+		}
+
+		transform.Rotate(revoDirection * Time.fixedDeltaTime);
 	}
 }
