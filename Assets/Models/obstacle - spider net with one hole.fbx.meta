@@ -1,0 +1,116 @@
+fileFormatVersion: 2
+guid: 50c16fa03cc109648aaac3404d08f1cb
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: group
+    100002: //RootNode
+    100004: obstacle___branch_0001:group
+    100006: obstacle___branch_0001:group1
+    100008: obstacle___branch_0001:group2
+    100010: obstacle___branch_0001:group3
+    100012: obstacle___branch_0001:pasted__group1
+    100014: obstacle___branch_0001:pasted__group2
+    100016: obstacle___branch_0001:pasted__pasted__group1
+    100018: obstacle___branch_0001:pasted__pasted__pasted__pCone2
+    100020: obstacle___branch_0001:pasted__pasted__pasted__transform1
+    100022: obstacle___branch_0001:pasted__pasted__pCone2
+    100024: obstacle___branch_0001:pasted__pasted__transform1
+    100026: obstacle___branch_0001:pasted__pCone2
+    100028: obstacle___branch_0001:pasted__pCone2 1
+    100030: obstacle___branch_0001:pasted__transform1
+    100032: obstacle___branch_0001:pasted__transform1 1
+    100034: obstacle___branch_0001:pCone2
+    100036: obstacle___branch_0001:pCylinder1
+    100038: obstacle___branch_0001:transform1
+    100040: pasted__pCylinder1
+    100042: pasted__pCylinder1 1
+    100044: pCylinder1
+    100046: transform1
+    100048: transform2
+    400000: group
+    400002: //RootNode
+    400004: obstacle___branch_0001:group
+    400006: obstacle___branch_0001:group1
+    400008: obstacle___branch_0001:group2
+    400010: obstacle___branch_0001:group3
+    400012: obstacle___branch_0001:pasted__group1
+    400014: obstacle___branch_0001:pasted__group2
+    400016: obstacle___branch_0001:pasted__pasted__group1
+    400018: obstacle___branch_0001:pasted__pasted__pasted__pCone2
+    400020: obstacle___branch_0001:pasted__pasted__pasted__transform1
+    400022: obstacle___branch_0001:pasted__pasted__pCone2
+    400024: obstacle___branch_0001:pasted__pasted__transform1
+    400026: obstacle___branch_0001:pasted__pCone2
+    400028: obstacle___branch_0001:pasted__pCone2 1
+    400030: obstacle___branch_0001:pasted__transform1
+    400032: obstacle___branch_0001:pasted__transform1 1
+    400034: obstacle___branch_0001:pCone2
+    400036: obstacle___branch_0001:pCylinder1
+    400038: obstacle___branch_0001:transform1
+    400040: pasted__pCylinder1
+    400042: pasted__pCylinder1 1
+    400044: pCylinder1
+    400046: transform1
+    400048: transform2
+    2300000: obstacle___branch_0001:pCylinder1
+    2300002: pasted__pCylinder1
+    3300000: obstacle___branch_0001:pCylinder1
+    3300002: pasted__pCylinder1
+    4300000: obstacle___branch_0001:pCylinder1
+    4300002: pasted__pCylinder1
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

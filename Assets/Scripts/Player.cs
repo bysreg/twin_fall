@@ -13,6 +13,7 @@ public class Player : MonoBehaviour {
 	private float maxRadius = 3.7f;
 	private Vector3 centerMovableArea;
 	private int index;
+	private 
 
 	void Start()
 	{
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour {
 		index = (name == "Bob" ? 0 : 1);
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
 		if(gameController.simulateWithKeyboard)
 		{
@@ -98,13 +99,20 @@ public class Player : MonoBehaviour {
 		}
 
 		//check radius
-		if(index == 0)
-			print ((transform.position - centerMovableArea).sqrMagnitude);
+//		if(index == 0)
+//			print ((transform.position - centerMovableArea).sqrMagnitude);
 		if((transform.position - centerMovableArea).sqrMagnitude > maxSqrRadius)
 		{
 			Ray ray = new Ray(centerMovableArea, transform.position - centerMovableArea);
 			//Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
 			transform.position = ray.GetPoint(maxRadius);
 		}
+
+		Revolute();
+	}
+
+	void Revolute()
+	{
+
 	}
 }

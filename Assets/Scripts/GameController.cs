@@ -62,8 +62,8 @@ public class GameController : MonoBehaviour {
 		nextCorrSpawnTime = GetNextCorrSpawnData ().time;
 
 		trunks = new GameObject[2];
-		trunks[0] = GameObject.Find("/trunks/Trunk1");
-		trunks[1] = GameObject.Find("/trunks/Trunk2");
+		trunks[0] = GameObject.Find("/trunks_new/Trunk1");
+		trunks[1] = GameObject.Find("/trunks_new/Trunk2");
 		curTrunk = trunks[0];
 		nextTrunk = trunks[1];
 	}
