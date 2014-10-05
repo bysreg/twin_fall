@@ -132,7 +132,7 @@ public class GameController : MonoBehaviour {
 	{
 		time += Time.deltaTime;
 
-		//UpdateSpawnCorr();
+		UpdateSpawnCorr();
 		UpdateSpawnCollectibles();
 	}
 
