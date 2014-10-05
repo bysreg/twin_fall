@@ -20,6 +20,7 @@ public class Player : MonoBehaviour {
 	private float changeRevoTime = 4.0f;
 	private float revoTime;
 	private Transform model;
+	private Transform combinedModel;
 
 	private Animator animator;
 
@@ -39,6 +40,7 @@ public class Player : MonoBehaviour {
 		revoDirection = new Vector3(Random.Range(100, 200), Random.Range(100, 200), Random.Range(100, 200));
 
 		model = transform.GetChild(0);
+		combinedModel = transform.GetChild (1);
 
 		animator = model.GetComponent<Animator>();
 	}
@@ -130,22 +132,26 @@ public class Player : MonoBehaviour {
 			//Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
 			transform.position = ray.GetPoint(maxRadius);
 		}
-
 		if (leapController.proximity < 1)
 		{
 			parentObject.SetActive(true);
 			transform.parent = parentObject.transform;
+
 			transform.localPosition = (index == 0) ? transform.parent.forward*0.3f: -transform.parent.forward*0.3f;
 			keepEyeContact();
 
 		}
 		else if (leapController.proximity > 2){
 			animator.SetBool("isCombined", false);
+			model.localScale = new Vector3(15f, 15f, 15f);
+			combinedModel.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 			transform.parent = null;
 			Revolute();
 		}
 		else{
 			animator.SetBool("isCombined", true);
+			model.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+			combinedModel.localScale = new Vector3(15f, 15f, 15f);
 			RotateToCombine();
 		}
 	}
@@ -154,11 +160,11 @@ public class Player : MonoBehaviour {
 	{
 		GameObject otherBird;
 		if (index == 0)
-			otherBird = GameObject.Find("Pew/BabyBirdWithTexture");
+			otherBird = GameObject.Find("Pew/CombineBird");
 		else
-			otherBird = GameObject.Find("Bob/BabyBirdWithTexture");
+			otherBird = GameObject.Find("Bob/CombineBird");
 
-		model.transform.LookAt (otherBird.transform.position);
+		combinedModel.transform.LookAt (otherBird.transform.position + otherBird.transform.up*2);
 	}
 
 	void RotateToCombine()
@@ -169,14 +175,14 @@ public class Player : MonoBehaviour {
 				newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (290, 270, 0), leapController.proximity-1);
 			else
 				newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (38, 94, 0), leapController.proximity-1);
-			model.rotation = newRotation;
+			combinedModel.rotation = newRotation;
 		}
 		else if (index == 1){
 			if (leapController.bobIsRight)
 				newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (38, 94, 0), leapController.proximity-1);
 			else
 				newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (290, 270, 0), leapController.proximity-1);
-			model.rotation = newRotation;
+			combinedModel.rotation = newRotation;
 		}
 	}
 

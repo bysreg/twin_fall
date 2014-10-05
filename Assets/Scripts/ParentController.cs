@@ -24,7 +24,6 @@ public class ParentController : MonoBehaviour {
 		leapController = GameObject.Find ("LeapController").GetComponent<LeapController>();
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
-
 	}
 	
 	// Update is called once per frame
@@ -32,7 +31,7 @@ public class ParentController : MonoBehaviour {
 		transform.position = leapController.meanPosition;
 		float z = mainCam.transform.position.z + gameController.playerZDistanceFromCamera;
 		transform.position = new Vector3(transform.position.x, transform.position.y, z);
-		transform.Rotate (2f, 2f, 2f);
+		transform.Rotate (0,2,0);
 		//Revolute ();
 	}
 
