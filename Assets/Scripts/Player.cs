@@ -164,7 +164,7 @@ public class Player : MonoBehaviour {
 		else
 			otherBird = GameObject.Find("Bob/CombineBird");
 
-		combinedModel.transform.LookAt (otherBird.transform.position);
+		combinedModel.transform.LookAt (otherBird.transform.position + otherBird.transform.up*2);
 	}
 
 	void RotateToCombine()

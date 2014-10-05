@@ -31,7 +31,7 @@ public class ParentController : MonoBehaviour {
 		transform.position = leapController.meanPosition;
 		float z = mainCam.transform.position.z + gameController.playerZDistanceFromCamera;
 		transform.position = new Vector3(transform.position.x, transform.position.y, z);
-		transform.Rotate (2,2,2);
+		transform.Rotate (0,2,0);
 		//Revolute ();
 	}
 
