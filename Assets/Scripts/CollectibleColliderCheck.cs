@@ -4,6 +4,7 @@ using System.Collections;
 public class CollectibleColliderCheck : MonoBehaviour {
 
 	public AudioClip hitCollClip;
+	public GameController.CollSpawnData.Type type;
 	
 	private GameController gameController;
 	
@@ -20,7 +21,10 @@ public class CollectibleColliderCheck : MonoBehaviour {
 		{
 			AudioSource.PlayClipAtPoint (hitCollClip, other.gameObject.transform.position);
 			isHit = true;
-			gameController.IncComboCount();
+			if(type == GameController.CollSpawnData.Type.Beat)
+			{
+				gameController.IncComboCount();
+			}
 		}
 	}
 
