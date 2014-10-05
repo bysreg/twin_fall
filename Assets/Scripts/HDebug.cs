@@ -32,5 +32,6 @@ public class HDebug : MonoBehaviour {
 		nextSpawnTimeText.text = "Next Spawn : " + gameController.GetNextCorrSpawnTime();
 		lifesText.text = "Lifes : " + gameController.lifes;
 		nextFeatherHit.text = "Next Feather Hit : " + gameController.GetCurOldestCollHitTime();
+		comboText.text = "Combo : " + gameController.GetComboCount();
 	}
 }
