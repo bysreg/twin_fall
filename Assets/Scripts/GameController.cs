@@ -11,6 +11,8 @@ public class GameController : MonoBehaviour {
 	public int lifes;
 	public TextAsset corrSpawnDataText;
 	public TextAsset collectiblesSpawnDataText;
+	public TextAsset beatCollectiblesSpawnDataText;
+	public AudioClip[] comboSound;
 
 	private GameObject player;
 	private GameObject player2;
@@ -28,14 +30,17 @@ public class GameController : MonoBehaviour {
 	private int curOldestCollIndex;
 	private int curCollSpawnIndex;
 	private float nextCorrSpawnTime;
-	private float nextCollSpawnTime;
-	private Vector2 nextCollSpawnPos;
 	private GameObject[] trunks;
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 
+	//next collectibles to be spawned
+	private float nextCollSpawnTime;
+	private Vector2 nextCollSpawnPos;
+	private CollSpawnData.Type nextCollSpawnType;
+
 	//combo system
-	private int comboCount;
+	private int comboCount; // dont modify combocount directly
 	private bool isPrevHit;
 
 	public class CorridorSpawnData
@@ -49,6 +54,12 @@ public class GameController : MonoBehaviour {
 		public float spawnTime;
 		public float hitTime;
 		public Vector2 position;
+		public enum Type{
+			Melody = 0,
+			Beat,
+		}
+
+		public Type type;
 	}
 
 	void Awake()
@@ -57,7 +68,9 @@ public class GameController : MonoBehaviour {
 		player2 = GameObject.Find("Pew");
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		corridors = GameObject.FindGameObjectsWithTag ("Corridor");
-		collectibles = GameObject.FindGameObjectsWithTag("Collectible");
+		collectibles = new GameObject[2];
+		collectibles[0] = GameObject.Find("Collectibles/Feather");
+		collectibles[1] = GameObject.Find("Collectibles/BeatFeather");
 		corrSpawnDatas = new List<CorridorSpawnData> ();
 		collSpawnDatas = new List<CollSpawnData> ();
 		activeCorridors = new List<GameObject> ();
@@ -78,10 +91,13 @@ public class GameController : MonoBehaviour {
 	
 	void InitializeCollectibleSpawnDatas()
 	{
-		string collectiblesSpawnDataString = collectiblesSpawnDataText.text;
-		string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
 		float s = player.transform.position.z - corridors [0].transform.position.z;
 		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
+
+		{
+			string collectiblesSpawnDataString = collectiblesSpawnDataText.text;
+			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
+
 
 		foreach(string line in collLines)
 		{
@@ -97,12 +113,47 @@ public class GameController : MonoBehaviour {
 			float x = float.Parse(splits[1]);
 			float y = float.Parse(splits[2]);
 			collSpawnData.position = new Vector2(x, y);
+				collSpawnData.type = CollSpawnData.Type.Melody;
 
 			collSpawnDatas.Add(collSpawnData);
 		}
+		}
+
+		{
+			string collectiblesSpawnDataString = beatCollectiblesSpawnDataText.text;
+			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
+			
+			foreach(string line in collLines)
+			{
+				if(line.Length == 0)
+				{
+					continue;
+				}
+				
+				CollSpawnData collSpawnData = new CollSpawnData();
+				string[] splits = line.Split(new char[] {' '});
+				collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
+				collSpawnData.hitTime = float.Parse(splits[0]);
+				float x = float.Parse(splits[1]);
+				float y = float.Parse(splits[2]);
+				collSpawnData.position = new Vector2(x, y);
+				collSpawnData.type = CollSpawnData.Type.Beat;
+				
+				collSpawnDatas.Add(collSpawnData);
+			}
+		}
+
+		collSpawnDatas.Sort((x, y) => x.spawnTime.CompareTo(y.spawnTime));
+
+		//debugging
+//		foreach( var data in collSpawnDatas)
+//		{
+//			print (data.spawnTime + " " + data.type);
+//		}
 
 		nextCollSpawnTime = GetNextCollSpawnData().spawnTime;
 		nextCollSpawnPos = GetNextCollSpawnData().position;
+		nextCollSpawnType = GetNextCollSpawnData().type;
 	}
 
 	void InitializeCorridorSpawnDatas()
@@ -111,6 +162,7 @@ public class GameController : MonoBehaviour {
 		string[] lines = spawnDataContent.Split (new char[] {'\n'});
 		float s = player.transform.position.z - corridors [0].transform.position.z;
 		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
+		print ("delta time : " + deltaTime);
 		
 		foreach(string line in lines)
 		{
@@ -163,13 +215,14 @@ public class GameController : MonoBehaviour {
 	{
 		if(time >= nextCollSpawnTime && curCollSpawnIndex < collSpawnDatas.Count)
 		{
-			activeColl.Add(SpawnColl(nextCollSpawnPos.x, nextCollSpawnPos.y));
+			activeColl.Add(SpawnColl(nextCollSpawnPos.x, nextCollSpawnPos.y, nextCollSpawnType));
 			curCollSpawnIndex++;
 			CollSpawnData nextCollSpawnData = GetNextCollSpawnData();
 			if(nextCollSpawnData != null)
 			{
 				nextCollSpawnTime = nextCollSpawnData.spawnTime;
 				nextCollSpawnPos = nextCollSpawnData.position;
+				nextCollSpawnType = nextCollSpawnData.type;
 			}
 		}
 	}
@@ -197,8 +250,9 @@ public class GameController : MonoBehaviour {
 		for(int i=activeColl.Count - 1; i >= 0; i--)
 		{
 			var coll = activeColl[i];
+			CollectibleColliderCheck ccc = coll.GetComponent<CollectibleColliderCheck>();
 
-			if(coll.GetComponent<CollectibleColliderCheck>().IsHit())
+			if(ccc.IsHit())
 			{
 				activeColl.Remove(coll);
 				Destroy(coll);
@@ -214,7 +268,10 @@ public class GameController : MonoBehaviour {
 				activeColl.Remove(coll);
 				Destroy(coll);
 				curOldestCollIndex++;
-				CancelCombo();
+				if(ccc.type == CollSpawnData.Type.Beat)
+				{
+					CancelCombo();
+				}
 				continue;
 			}
 		}
@@ -245,9 +302,18 @@ public class GameController : MonoBehaviour {
 		return corr;
 	}
 
-	GameObject SpawnColl(float x, float y)
+	GameObject SpawnColl(float x, float y, CollSpawnData.Type type)
 	{
-		GameObject coll = Instantiate (collectibles[0]) as GameObject;
+		GameObject coll = null;
+//		print ("spawn coll : " + type);
+		if(type == CollSpawnData.Type.Melody)
+		{
+			coll = Instantiate (collectibles[0]) as GameObject;
+		}
+		else if(type == CollSpawnData.Type.Beat)
+		{
+			coll = Instantiate (collectibles[1]) as GameObject;
+		}
 		coll.transform.position = new Vector3(x, y, 50);
 		return coll;
 	}
@@ -326,6 +392,9 @@ public class GameController : MonoBehaviour {
 	public void IncComboCount()
 	{
 		comboCount++;
+
+		//play combo sound
+		AudioSource.PlayClipAtPoint(comboSound[comboCount <= comboSound.Length ? comboCount - 1 : comboSound.Length - 1], mainCam.transform.position);
 	}
 
 	public void CancelCombo()
