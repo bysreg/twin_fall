@@ -68,7 +68,9 @@ public class GameController : MonoBehaviour {
 		player2 = GameObject.Find("Pew");
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		corridors = GameObject.FindGameObjectsWithTag ("Corridor");
-		collectibles = GameObject.FindGameObjectsWithTag("Collectible");
+		collectibles = new GameObject[2];
+		collectibles[0] = GameObject.Find("Collectibles/Feather");
+		collectibles[1] = GameObject.Find("Collectibles/BeatFeather");
 		corrSpawnDatas = new List<CorridorSpawnData> ();
 		collSpawnDatas = new List<CollSpawnData> ();
 		activeCorridors = new List<GameObject> ();
@@ -93,7 +95,6 @@ public class GameController : MonoBehaviour {
 		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
 
 		{
-			print (collSpawnDatas.Count);
 			string collectiblesSpawnDataString = collectiblesSpawnDataText.text;
 			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
 
@@ -119,7 +120,6 @@ public class GameController : MonoBehaviour {
 		}
 
 		{
-			print (collSpawnDatas.Count);
 			string collectiblesSpawnDataString = beatCollectiblesSpawnDataText.text;
 			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
 			
@@ -141,15 +141,15 @@ public class GameController : MonoBehaviour {
 				
 				collSpawnDatas.Add(collSpawnData);
 			}
-			print (collSpawnDatas.Count);
 		}
 
 		collSpawnDatas.Sort((x, y) => x.spawnTime.CompareTo(y.spawnTime));
 
-		foreach( var data in collSpawnDatas)
-		{
-			print (data.spawnTime + " " + data.type);
-		}
+		//debugging
+//		foreach( var data in collSpawnDatas)
+//		{
+//			print (data.spawnTime + " " + data.type);
+//		}
 
 		nextCollSpawnTime = GetNextCollSpawnData().spawnTime;
 		nextCollSpawnPos = GetNextCollSpawnData().position;
@@ -305,7 +305,7 @@ public class GameController : MonoBehaviour {
 	GameObject SpawnColl(float x, float y, CollSpawnData.Type type)
 	{
 		GameObject coll = null;
-		print (type);
+//		print ("spawn coll : " + type);
 		if(type == CollSpawnData.Type.Melody)
 		{
 			coll = Instantiate (collectibles[0]) as GameObject;
