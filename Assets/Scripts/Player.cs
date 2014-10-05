@@ -111,6 +111,11 @@ public class Player : MonoBehaviour {
 			}
 		}
 
+		if (index == 0)
+						leapController.bobPosition = transform.position;
+				else if (index == 1)
+						leapController.pewPosition = transform.position;
+
 		//check radius
 //		if(index == 0)
 //			print ((transform.position - centerMovableArea).sqrMagnitude);

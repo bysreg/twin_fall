@@ -28,8 +28,9 @@ public class LeapController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		_currentFrame = _leapController.Frame();
-		if(_leapManager != null) { 
-			if(_leapManager.pointerAvailible)
+		//if(_leapManager != null) 
+		{ 
+			//if(_leapManager.pointerAvailible)
 			{
 				Hand hand1, hand2;
 				int hand1Id, hand2Id;
@@ -68,7 +69,6 @@ public class LeapController : MonoBehaviour {
 				if (isCombined == false)
 				{
 					proximity = (Vector3.Distance(bobPosition, pewPosition));
-					Debug.Log (proximity-1);
 					if (Vector3.Distance(bobPosition, pewPosition) < 1)
 					{
 						Debug.Log ("Combine!");
