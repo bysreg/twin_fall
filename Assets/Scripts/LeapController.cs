@@ -7,6 +7,9 @@ public class LeapController : MonoBehaviour {
 	public Vector3 bobPosition;
 	public Vector3 pewPosition;
 
+	public bool isCombined = false;
+	public float proximity = 10.0f;
+
 	private Camera _mainCam;
 	private LeapManager _leapManager;
 
@@ -14,7 +17,7 @@ public class LeapController : MonoBehaviour {
 	private static Frame _currentFrame = Frame.Invalid;
 
 	private int oldHand1Id = 0, oldHand2Id = 0;
-	private bool isCombined = false;
+
 
 	// Use this for initialization
 	void Start () {
@@ -25,8 +28,9 @@ public class LeapController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		_currentFrame = _leapController.Frame();
-		if(_leapManager != null) { 
-			if(_leapManager.pointerAvailible)
+		//if(_leapManager != null) 
+		{ 
+			//if(_leapManager.pointerAvailible)
 			{
 				Hand hand1, hand2;
 				int hand1Id, hand2Id;
@@ -62,9 +66,15 @@ public class LeapController : MonoBehaviour {
 					pewPosition = pointer_finger.TipPosition.ToUnityTranslated();
 				}
 
-				if (Vector3.Distance(bobPosition, pewPosition) < 1 && isCombined == false){
-					Debug.Log ("Combine!");
-					isCombined = true;
+				if (isCombined == false)
+				{
+					proximity = (Vector3.Distance(bobPosition, pewPosition));
+					if (Vector3.Distance(bobPosition, pewPosition) < 1)
+					{
+						Debug.Log ("Combine!");
+						isCombined = true;
+					}
+
 				}
 				else if (Vector3.Distance(bobPosition, pewPosition) > 2 && isCombined == true){
 					Debug.Log ("Split");
