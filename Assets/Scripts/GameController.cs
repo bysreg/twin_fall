@@ -43,6 +43,7 @@ public class GameController : MonoBehaviour {
 	//combo system
 	private int comboCount; // dont modify combocount directly
 	private bool isPrevHit;
+	private GameObject[] comboPops;
 
 	//snakes
 	public float snakeMinTime; // minimum time to spawn the snake for the first time
@@ -103,6 +104,13 @@ public class GameController : MonoBehaviour {
 		//init snake
 		nextSnakeSpawnTime = Random.Range(minMaxSnakeSpawnTime.x, minMaxSnakeSpawnTime.y) + snakeMinTime;
 		snakeInstance = GameObject.Find("Snake");
+
+		//combos
+		comboPops = new GameObject[4];
+		comboPops[0] = GameObject.Find("/ComboTextures/Good");
+		comboPops[1] = GameObject.Find("/ComboTextures/Cool");
+		comboPops[2] = GameObject.Find("/ComboTextures/Yoho");
+		comboPops[3] = GameObject.Find("/ComboTextures/Woo");
 	}
 	
 	void InitializeCollectibleSpawnDatas()
@@ -453,12 +461,22 @@ public class GameController : MonoBehaviour {
 		return comboCount;
 	}
 
-	public void IncComboCount()
+	public void IncComboCount(Vector3 position)
 	{
 		comboCount++;
 
 		//play combo sound
-		AudioSource.PlayClipAtPoint(comboSound[comboCount <= comboSound.Length ? comboCount - 1 : comboSound.Length - 1], mainCam.transform.position);
+		int type = comboCount <= comboSound.Length ? comboCount - 1 : comboSound.Length - 1;
+		AudioSource.PlayClipAtPoint(comboSound[type], mainCam.transform.position);
+		//display combo text
+		//ShowComboPop(type, position); fixme
+	}
+
+	public void ShowComboPop(int type, Vector3 position)
+	{
+		comboPops[type].SetActive(true);
+		comboPops[type].transform.position = position;
+		//comboPops[type].
 	}
 
 	public void CancelCombo()

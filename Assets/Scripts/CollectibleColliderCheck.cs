@@ -23,7 +23,7 @@ public class CollectibleColliderCheck : MonoBehaviour {
 			isHit = true;
 			if(type == GameController.CollSpawnData.Type.Beat)
 			{
-				gameController.IncComboCount();
+				gameController.IncComboCount(transform.position);
 			}
 		}
 	}
