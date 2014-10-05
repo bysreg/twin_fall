@@ -1,0 +1,123 @@
+fileFormatVersion: 2
+guid: c102bb875d1cc85459335e49a638bd54
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: obstacle__snake:group
+    100004: obstacle__snake:group1
+    100006: obstacle__snake:group2
+    100008: obstacle__snake:group2_pasted__pCylinder2
+    100010: obstacle__snake:obstacle___branch_0001:group
+    100012: obstacle__snake:obstacle___branch_0001:group1
+    100014: obstacle__snake:obstacle___branch_0001:group2
+    100016: obstacle__snake:obstacle___branch_0001:group3
+    100018: obstacle__snake:obstacle___branch_0001:pasted__group1
+    100020: obstacle__snake:obstacle___branch_0001:pasted__group2
+    100022: obstacle__snake:obstacle___branch_0001:pasted__pasted__group1
+    100024: obstacle__snake:obstacle___branch_0001:pasted__pasted__pasted__pCone2
+    100026: obstacle__snake:obstacle___branch_0001:pasted__pasted__pasted__transform1
+    100028: obstacle__snake:obstacle___branch_0001:pasted__pasted__pCone2
+    100030: obstacle__snake:obstacle___branch_0001:pasted__pasted__transform1
+    100032: obstacle__snake:obstacle___branch_0001:pasted__pCone2
+    100034: obstacle__snake:obstacle___branch_0001:pasted__pCone2 1
+    100036: obstacle__snake:obstacle___branch_0001:pasted__transform1
+    100038: obstacle__snake:obstacle___branch_0001:pasted__transform1 1
+    100040: obstacle__snake:obstacle___branch_0001:pCone2
+    100042: obstacle__snake:obstacle___branch_0001:transform1
+    100044: obstacle__snake:pasted__pCylinder1
+    100046: obstacle__snake:pasted__pCylinder2
+    100048: obstacle__snake:pCylinder1
+    100050: obstacle__snake:pCylinder2
+    100052: obstacle__snake:transform1
+    100054: obstacle__snake:transform2
+    100056: obstacle__snake:transform3
+    100058: obstacle__snake:transform4
+    400000: //RootNode
+    400002: obstacle__snake:group
+    400004: obstacle__snake:group1
+    400006: obstacle__snake:group2
+    400008: obstacle__snake:group2_pasted__pCylinder2
+    400010: obstacle__snake:obstacle___branch_0001:group
+    400012: obstacle__snake:obstacle___branch_0001:group1
+    400014: obstacle__snake:obstacle___branch_0001:group2
+    400016: obstacle__snake:obstacle___branch_0001:group3
+    400018: obstacle__snake:obstacle___branch_0001:pasted__group1
+    400020: obstacle__snake:obstacle___branch_0001:pasted__group2
+    400022: obstacle__snake:obstacle___branch_0001:pasted__pasted__group1
+    400024: obstacle__snake:obstacle___branch_0001:pasted__pasted__pasted__pCone2
+    400026: obstacle__snake:obstacle___branch_0001:pasted__pasted__pasted__transform1
+    400028: obstacle__snake:obstacle___branch_0001:pasted__pasted__pCone2
+    400030: obstacle__snake:obstacle___branch_0001:pasted__pasted__transform1
+    400032: obstacle__snake:obstacle___branch_0001:pasted__pCone2
+    400034: obstacle__snake:obstacle___branch_0001:pasted__pCone2 1
+    400036: obstacle__snake:obstacle___branch_0001:pasted__transform1
+    400038: obstacle__snake:obstacle___branch_0001:pasted__transform1 1
+    400040: obstacle__snake:obstacle___branch_0001:pCone2
+    400042: obstacle__snake:obstacle___branch_0001:transform1
+    400044: obstacle__snake:pasted__pCylinder1
+    400046: obstacle__snake:pasted__pCylinder2
+    400048: obstacle__snake:pCylinder1
+    400050: obstacle__snake:pCylinder2
+    400052: obstacle__snake:transform1
+    400054: obstacle__snake:transform2
+    400056: obstacle__snake:transform3
+    400058: obstacle__snake:transform4
+    2300000: obstacle__snake:group2_pasted__pCylinder2
+    3300000: obstacle__snake:group2_pasted__pCylinder2
+    4300000: obstacle__snake:group2_pasted__pCylinder2
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
