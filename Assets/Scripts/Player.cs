@@ -135,12 +135,11 @@ public class Player : MonoBehaviour {
 		{
 			parentObject.SetActive(true);
 			transform.parent = parentObject.transform;
-			transform.position = leapController.meanPosition - model.forward*0.3f;
+			transform.localPosition = (index == 0) ? transform.parent.forward*0.3f: -transform.parent.forward*0.3f;
+			keepEyeContact();
 
 		}
-
-
-		if (leapController.proximity > 2){
+		else if (leapController.proximity > 2){
 			animator.SetBool("isCombined", false);
 			transform.parent = null;
 			Revolute();
@@ -149,6 +148,17 @@ public class Player : MonoBehaviour {
 			animator.SetBool("isCombined", true);
 			RotateToCombine();
 		}
+	}
+
+	void keepEyeContact()
+	{
+		GameObject otherBird;
+		if (index == 0)
+			otherBird = GameObject.Find("Pew/BabyBirdWithTexture");
+		else
+			otherBird = GameObject.Find("Bob/BabyBirdWithTexture");
+
+		model.transform.LookAt (otherBird.transform.position);
 	}
 
 	void RotateToCombine()

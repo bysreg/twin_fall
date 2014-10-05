@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour {
 	private GameObject[] trunks;
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
+	private GameObject parent;
 
 	//next collectibles to be spawned
 	private float nextCollSpawnTime;
@@ -66,6 +67,7 @@ public class GameController : MonoBehaviour {
 	{
 		player = GameObject.Find("Bob");
 		player2 = GameObject.Find("Pew");
+		parent = GameObject.Find("parentObject");
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		corridors = GameObject.FindGameObjectsWithTag ("Corridor");
 		collectibles = new GameObject[2];
@@ -78,6 +80,7 @@ public class GameController : MonoBehaviour {
 
 		player.transform.position = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 		player2.transform.position = new Vector3 (mainCam.transform.position.x + 3, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
+		parent.transform.position = new Vector3 (mainCam.transform.position.x + 3, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 
 		InitializeCorridorSpawnDatas();
 		InitializeCollectibleSpawnDatas();
