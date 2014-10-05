@@ -6,9 +6,11 @@ public class LeapController : MonoBehaviour {
 
 	public Vector3 bobPosition;
 	public Vector3 pewPosition;
+	public Vector3 meanPosition;
 
 	public bool isCombined = false;
 	public float proximity = 10.0f;
+	public bool bobIsRight = true;
 
 	private Camera _mainCam;
 	private LeapManager _leapManager;
@@ -28,9 +30,9 @@ public class LeapController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		_currentFrame = _leapController.Frame();
-		//if(_leapManager != null) 
+		if(_leapManager != null) 
 		{ 
-			//if(_leapManager.pointerAvailible)
+			if(_leapManager.pointerAvailible)
 			{
 				Hand hand1, hand2;
 				int hand1Id, hand2Id;
@@ -65,6 +67,13 @@ public class LeapController : MonoBehaviour {
 					Finger pointer_finger = LeapManager.pointingFigner(hand2);
 					pewPosition = pointer_finger.TipPosition.ToUnityTranslated();
 				}
+
+				if (bobPosition.x > pewPosition.x)
+					bobIsRight = true;
+				else
+					bobIsRight = false;
+
+				meanPosition = (bobPosition+pewPosition)/2;
 
 				if (isCombined == false)
 				{

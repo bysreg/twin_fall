@@ -7,6 +7,8 @@ public class Player : MonoBehaviour {
 
 	private GameController gameController;
 	private LeapController leapController;
+	private GameObject parentObject;
+
 	private Rect bounds;
 	private float playerZPos;
 	private float maxSqrRadius;
@@ -27,6 +29,9 @@ public class Player : MonoBehaviour {
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
 		leapController = GameObject.Find ("LeapController").GetComponent<LeapController>();
+
+		parentObject = GameObject.Find("parentObject");
+
 		playerZPos = transform.position.z;
 		maxSqrRadius = maxRadius * maxRadius;
 		centerMovableArea = new Vector3(gameController.GetMainCam().transform.position.x, gameController.GetMainCam().transform.position.y, playerZPos);
@@ -126,8 +131,18 @@ public class Player : MonoBehaviour {
 			transform.position = ray.GetPoint(maxRadius);
 		}
 
+		if (leapController.proximity < 1)
+		{
+			parentObject.SetActive(true);
+			transform.parent = parentObject.transform;
+			transform.position = leapController.meanPosition - model.forward*0.3f;
+
+		}
+
+
 		if (leapController.proximity > 2){
 			animator.SetBool("isCombined", false);
+			transform.parent = null;
 			Revolute();
 		}
 		else{
@@ -138,13 +153,19 @@ public class Player : MonoBehaviour {
 
 	void RotateToCombine()
 	{
+		Quaternion newRotation;
 		if (index == 0){
-			Quaternion newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (290, 270, 0), leapController.proximity-1);
-			Debug.Log (leapController.proximity-1);
+			if (leapController.bobIsRight)
+				newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (290, 270, 0), leapController.proximity-1);
+			else
+				newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (38, 94, 0), leapController.proximity-1);
 			model.rotation = newRotation;
 		}
 		else if (index == 1){
-			Quaternion newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (38, 94, 0), leapController.proximity-1);
+			if (leapController.bobIsRight)
+				newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (38, 94, 0), leapController.proximity-1);
+			else
+				newRotation = Quaternion.Lerp (model.transform.rotation, Quaternion.Euler (290, 270, 0), leapController.proximity-1);
 			model.rotation = newRotation;
 		}
 	}

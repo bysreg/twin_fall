@@ -11,7 +11,6 @@ public class GameController : MonoBehaviour {
 	public int lifes;
 	public TextAsset corrSpawnDataText;
 	public TextAsset collectiblesSpawnDataText;
-	public AudioClip[] comboSound;
 
 	private GameObject player;
 	private GameObject player2;
@@ -36,7 +35,7 @@ public class GameController : MonoBehaviour {
 	private GameObject nextTrunk;
 
 	//combo system
-	private int comboCount; // dont modify combocount directly
+	private int comboCount;
 	private bool isPrevHit;
 
 	public class CorridorSpawnData
@@ -133,7 +132,7 @@ public class GameController : MonoBehaviour {
 	{
 		time += Time.deltaTime;
 
-		//UpdateSpawnCorr(); // fixme
+		UpdateSpawnCorr();
 		UpdateSpawnCollectibles();
 	}
 
@@ -327,9 +326,6 @@ public class GameController : MonoBehaviour {
 	public void IncComboCount()
 	{
 		comboCount++;
-
-		//play combo sound
-		AudioSource.PlayClipAtPoint(comboSound[comboCount <= comboSound.Length ? comboCount - 1 : comboSound.Length - 1], mainCam.transform.position);
 	}
 
 	public void CancelCombo()
