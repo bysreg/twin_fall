@@ -112,6 +112,7 @@ public class GameController : MonoBehaviour {
 		string[] lines = spawnDataContent.Split (new char[] {'\n'});
 		float s = player.transform.position.z - corridors [0].transform.position.z;
 		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
+		print ("delta time : " + deltaTime);
 		
 		foreach(string line in lines)
 		{
@@ -133,7 +134,7 @@ public class GameController : MonoBehaviour {
 	{
 		time += Time.deltaTime;
 
-		//UpdateSpawnCorr(); // fixme
+		UpdateSpawnCorr(); // fixme
 		UpdateSpawnCollectibles();
 	}
 
