@@ -338,9 +338,13 @@ public class GameController : MonoBehaviour {
 
 			if(snake.transform.position.z <= snakeShowUpZ && snake.transform.position.z >= snakeShowUpZ - 3)
 			{
-				//snake.transform.position = new Vector3(snake.transform.position.x, (snake.transform.up * 3.3f).y, snake.transform.position.z);
-				//snake.transform.position += new Vector3(0, (snake.transform.up * 30.5f * Time.fixedDeltaTime).y, 0);
 				snake.transform.position += snake.transform.up * 35.5f * Time.fixedDeltaTime;
+			}
+			else if(snake.transform.position.z < snakeShowUpZ - 3)
+			{
+				var snakeComp = snake.GetComponent<Snake>();
+				if(!snakeComp.play)
+					snakeComp.play = true;
 			}
 		}
 

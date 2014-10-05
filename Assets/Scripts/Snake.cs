@@ -34,12 +34,9 @@ public class Snake : MonoBehaviour {
 				play = false;
 				return;
 			}
+
+			//print (frameIndex);
 			meshRenderer.material.mainTexture = frames[frameIndex];
 		}
-	}
-
-	public void SetPlay()
-	{
-		play = true;
 	}
 }
