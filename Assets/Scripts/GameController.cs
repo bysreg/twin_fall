@@ -43,6 +43,14 @@ public class GameController : MonoBehaviour {
 	private int comboCount; // dont modify combocount directly
 	private bool isPrevHit;
 
+	//snakes
+	public float snakeMinTime; // minimum time to spawn the snake for the first time
+	public Vector2 minMaxSnakeSpawnTime; // minimum and maximum snake spawn time
+	public float snakeShowUpZ;
+	private float nextSnakeSpawnTime; //time to spawn next snake
+	private GameObject snakeInstance; // original snake gameobject to be cloned
+	private List<GameObject> activeSnakes;
+
 	public class CorridorSpawnData
 	{
 		public float spawnTime;
@@ -75,6 +83,7 @@ public class GameController : MonoBehaviour {
 		collSpawnDatas = new List<CollSpawnData> ();
 		activeCorridors = new List<GameObject> ();
 		activeColl = new List<GameObject>();
+		activeSnakes = new List<GameObject>();
 
 		player.transform.position = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 		player2.transform.position = new Vector3 (mainCam.transform.position.x + 3, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
@@ -87,6 +96,10 @@ public class GameController : MonoBehaviour {
 		trunks[1] = GameObject.Find("/trunks_new/Trunk2");
 		curTrunk = trunks[0];
 		nextTrunk = trunks[1];
+
+		//init snake
+		nextSnakeSpawnTime = Random.Range(minMaxSnakeSpawnTime.x, minMaxSnakeSpawnTime.y) + snakeMinTime;
+		snakeInstance = GameObject.Find("Snake");
 	}
 	
 	void InitializeCollectibleSpawnDatas()
@@ -186,6 +199,7 @@ public class GameController : MonoBehaviour {
 
 		UpdateSpawnCorr();
 		UpdateSpawnCollectibles();
+		UpdateSpawnSnakes();
 	}
 
 	void FixedUpdate()
@@ -193,6 +207,7 @@ public class GameController : MonoBehaviour {
 		UpdateCorridor ();
 		UpdateCollectibles();
 		UpdateTrunk();
+		UpdateSnakes ();
 	}
 
 	void UpdateSpawnCorr()
@@ -224,6 +239,15 @@ public class GameController : MonoBehaviour {
 				nextCollSpawnPos = nextCollSpawnData.position;
 				nextCollSpawnType = nextCollSpawnData.type;
 			}
+		}
+	}
+
+	void UpdateSpawnSnakes()
+	{
+		if(time >= nextSnakeSpawnTime)
+		{
+			activeSnakes.Add(SpawnSnake());
+			nextSnakeSpawnTime = time + Random.Range(minMaxSnakeSpawnTime.x, minMaxSnakeSpawnTime.y);
 		}
 	}
 
@@ -295,6 +319,30 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	void UpdateSnakes()
+	{
+		for(int i = activeSnakes.Count - 1; i >= 0; i--)
+		{
+			var snake = activeSnakes[i];
+			snake.transform.position += corridorV * Time.fixedDeltaTime;
+
+			if(snake.transform.position.z < -10)
+			{
+				activeSnakes.Remove(snake);
+				Destroy(snake);
+				continue;
+			}
+
+			if(snake.transform.position.z <= snakeShowUpZ && snake.transform.position.z >= snakeShowUpZ - 3)
+			{
+				//snake.transform.position = new Vector3(snake.transform.position.x, (snake.transform.up * 3.3f).y, snake.transform.position.z);
+				//snake.transform.position += new Vector3(0, (snake.transform.up * 30.5f * Time.fixedDeltaTime).y, 0);
+				snake.transform.position += snake.transform.up * 35.5f * Time.fixedDeltaTime;
+			}
+		}
+
+	}
+
 	GameObject SpawnCorridor(int type)
 	{
 		GameObject corr = Instantiate (corridors [type]) as GameObject;
@@ -316,6 +364,15 @@ public class GameController : MonoBehaviour {
 		}
 		coll.transform.position = new Vector3(x, y, 50);
 		return coll;
+	}
+
+	GameObject SpawnSnake()
+	{
+		GameObject snake = Instantiate(snakeInstance) as GameObject;
+		float x = -0.08752429f;
+		snake.transform.position = new Vector3(x, 1, 50);
+		snake.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
+		return snake;
 	}
 
 	public List<CorridorSpawnData> GetCorrSpawnDatas()
