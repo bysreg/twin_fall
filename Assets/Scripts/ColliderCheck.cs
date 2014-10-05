@@ -31,6 +31,7 @@ public class ColliderCheck : MonoBehaviour {
 			gameController.HitPlayer();
 			AudioSource.PlayClipAtPoint (hitCorrClip, other.gameObject.transform.position);
 			isHit = true;
+			gameController.CancelCombo();
 		}
 	}
 
@@ -41,6 +42,7 @@ public class ColliderCheck : MonoBehaviour {
 		{
 			AudioSource.PlayClipAtPoint (passCorrClip, mainCam.transform.position);
 			isPassClipPlayed = true;
+			gameController.IncComboCount();
 		}
 	}
 

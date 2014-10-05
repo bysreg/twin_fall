@@ -1,0 +1,128 @@
+fileFormatVersion: 2
+guid: 869165f59be39e44588f9efcfa48c903
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: group
+    100002: group1
+    100004: group2
+    100006: group2_pasted__pCylinder2
+    100008: //RootNode
+    100010: obstacle___branch_0001:group
+    100012: obstacle___branch_0001:group1
+    100014: obstacle___branch_0001:group2
+    100016: obstacle___branch_0001:group3
+    100018: obstacle___branch_0001:pasted__group1
+    100020: obstacle___branch_0001:pasted__group2
+    100022: obstacle___branch_0001:pasted__pasted__group1
+    100024: obstacle___branch_0001:pasted__pasted__pasted__pCone2
+    100026: obstacle___branch_0001:pasted__pasted__pasted__transform1
+    100028: obstacle___branch_0001:pasted__pasted__pCone2
+    100030: obstacle___branch_0001:pasted__pasted__transform1
+    100032: obstacle___branch_0001:pasted__pCone2
+    100034: obstacle___branch_0001:pasted__pCone2 1
+    100036: obstacle___branch_0001:pasted__transform1
+    100038: obstacle___branch_0001:pasted__transform1 1
+    100040: obstacle___branch_0001:pCone2
+    100042: obstacle___branch_0001:transform1
+    100044: pasted__pCylinder1
+    100046: pasted__pCylinder2
+    100048: pasted__pCylinder2 1
+    100050: pCylinder1
+    100052: pCylinder2
+    100054: transform1
+    100056: transform2
+    100058: transform3
+    100060: transform4
+    400000: group
+    400002: group1
+    400004: group2
+    400006: group2_pasted__pCylinder2
+    400008: //RootNode
+    400010: obstacle___branch_0001:group
+    400012: obstacle___branch_0001:group1
+    400014: obstacle___branch_0001:group2
+    400016: obstacle___branch_0001:group3
+    400018: obstacle___branch_0001:pasted__group1
+    400020: obstacle___branch_0001:pasted__group2
+    400022: obstacle___branch_0001:pasted__pasted__group1
+    400024: obstacle___branch_0001:pasted__pasted__pasted__pCone2
+    400026: obstacle___branch_0001:pasted__pasted__pasted__transform1
+    400028: obstacle___branch_0001:pasted__pasted__pCone2
+    400030: obstacle___branch_0001:pasted__pasted__transform1
+    400032: obstacle___branch_0001:pasted__pCone2
+    400034: obstacle___branch_0001:pasted__pCone2 1
+    400036: obstacle___branch_0001:pasted__transform1
+    400038: obstacle___branch_0001:pasted__transform1 1
+    400040: obstacle___branch_0001:pCone2
+    400042: obstacle___branch_0001:transform1
+    400044: pasted__pCylinder1
+    400046: pasted__pCylinder2
+    400048: pasted__pCylinder2 1
+    400050: pCylinder1
+    400052: pCylinder2
+    400054: transform1
+    400056: transform2
+    400058: transform3
+    400060: transform4
+    2300000: group2_pasted__pCylinder2
+    2300002: pasted__pCylinder2
+    3300000: group2_pasted__pCylinder2
+    3300002: pasted__pCylinder2
+    4300000: pasted__pCylinder2
+    4300002: group2_pasted__pCylinder2
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

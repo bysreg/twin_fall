@@ -34,6 +34,10 @@ public class GameController : MonoBehaviour {
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 
+	//combo system
+	private int comboCount;
+	private bool isPrevHit;
+
 	public class CorridorSpawnData
 	{
 		public float spawnTime;
@@ -183,6 +187,7 @@ public class GameController : MonoBehaviour {
 				activeCorridors.Remove(corridor);
 				curOldestCorrIndex++;
 				Destroy(corridor);
+				continue;
 			}
 		}
 	}
@@ -203,12 +208,13 @@ public class GameController : MonoBehaviour {
 
 			coll.transform.position += corridorV * Time.fixedDeltaTime;
 
-			//delete the coll if it's not used anymore
+			//delete the coll if it's not used anymore, this means that this collectible is not hit by the player
 			if(coll.transform.position.z < -10)
 			{
 				activeColl.Remove(coll);
 				Destroy(coll);
 				curOldestCollIndex++;
+				CancelCombo();
 				continue;
 			}
 		}
@@ -218,14 +224,14 @@ public class GameController : MonoBehaviour {
 	{
 		for(int i=0;i < trunks.Length;i++)
 		{
-			trunks[i].transform.position += corridorV * Time.fixedDeltaTime;
+			trunks[i].transform.position += (corridorV) * Time.fixedDeltaTime;
 		}
 
 		for(int i=0;i < trunks.Length; i++)
 		{
-			if(trunks[i].transform.position.z < -64)
+			if(trunks[i].transform.position.z < -186)
 			{
-				trunks[i].transform.position = trunks[(i + 1) % 2].transform.position + new Vector3(0, 0, 64.71f);
+				trunks[i].transform.position = trunks[(i + 1) % 2].transform.position + new Vector3(0, 0, 186.384f);
 
 				break;
 			}
@@ -310,5 +316,20 @@ public class GameController : MonoBehaviour {
 		if(curOldestCollIndex < collSpawnDatas.Count)
 			return collSpawnDatas[curOldestCollIndex].hitTime;
 		return 0;
+	}
+
+	public int GetComboCount()
+	{
+		return comboCount;
+	}
+
+	public void IncComboCount()
+	{
+		comboCount++;
+	}
+
+	public void CancelCombo()
+	{
+		comboCount = 0;
 	}
 }
