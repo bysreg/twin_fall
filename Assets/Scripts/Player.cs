@@ -22,6 +22,8 @@ public class Player : MonoBehaviour {
 	private Transform model;
 	private Transform combinedModel;
 
+	public GameObject soundObject;
+
 	private bool firstTime = true;
 
 	private Animator animator;
@@ -138,7 +140,7 @@ public class Player : MonoBehaviour {
 		{
 			parentObject.SetActive(true);
 			if (firstTime){
-				parentObject.audio.Play();
+				soundObject.audio.Play();
 				firstTime = false;
 			}
 			transform.parent = parentObject.transform;
