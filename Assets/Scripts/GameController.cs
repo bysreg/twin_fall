@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour {
 	private List<CorridorSpawnData> corrSpawnDatas;
 	private int curCorrSpawnIndex;
 	private int curOldestCorrIndex;
-	private float nextCorrSpawnTime;
+	private CorridorSpawnData nextCorrSpawn;
 	private readonly Vector3 corrSpawnPoint = new Vector3(0, 1, 50);
 
 	private float possibleFinishedTime;
@@ -66,6 +66,8 @@ public class GameController : MonoBehaviour {
 	{
 		public float spawnTime;
 		public float hitTime;
+		public int type;
+		public Vector3[] holeWPos;
 	}
 
 	public class CollSpawnData
@@ -118,20 +120,6 @@ public class GameController : MonoBehaviour {
 
 		//combos
 		InitializeCombos();
-
-		//corridor holes
-		corrHolePositions = new Vector3[corridors.Length][];
-		for(int i = 0; i < corridors.Length; i++)
-		{
-			int holeCount = corridors[i].transform.Find("Holes").childCount;
-			corridorsHole[i] = holeCount;
-			corrHolePositions[i] = new Vector3[holeCount];
-
-			for(int j = 0; j < holeCount; j++)
-			{
-				corrHolePositions[i][j] = corridors[i].transform.Find("Holes/" + (j + 1)).transform.localPosition;
-			}
-		}
 	}
 
 	void InitializeCombos()
@@ -176,30 +164,6 @@ public class GameController : MonoBehaviour {
 			}
 		}
 
-//		{
-//			string collectiblesSpawnDataString = corrSpawnDataText.text;
-//			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
-//			
-//			foreach(string line in collLines)
-//			{
-//				if(line.Length == 0)
-//				{
-//					continue;
-//				}
-//				
-//				CollSpawnData collSpawnData = new CollSpawnData();
-//				string[] splits = line.Split(new char[] {' '});
-//				collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
-//				collSpawnData.hitTime = float.Parse(splits[0]);
-//				float x = float.Parse(splits[1]);
-//				float y = float.Parse(splits[2]);
-//				collSpawnData.position = new Vector2(x, y);
-//				collSpawnData.type = CollSpawnData.Type.Beat;
-//				
-//				collSpawnDatas.Add(collSpawnData);
-//			}
-//		}
-
 		collSpawnDatas.Sort((x, y) => x.spawnTime.CompareTo(y.spawnTime));
 
 		//debugging
@@ -220,7 +184,21 @@ public class GameController : MonoBehaviour {
 		float s = player.transform.position.z - corridors [0].transform.position.z;
 		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
 		print ("delta time : " + deltaTime);
-		
+
+		//corridor holes
+		corrHolePositions = new Vector3[corridors.Length][];
+		for(int i = 0; i < corridors.Length; i++)
+		{
+			int holeCount = corridors[i].transform.Find("Holes").childCount;
+			corridorsHole[i] = holeCount;
+			corrHolePositions[i] = new Vector3[holeCount];
+			
+			for(int j = 0; j < holeCount; j++)
+			{
+				corrHolePositions[i][j] = corridors[i].transform.Find("Holes/" + (j + 1)).transform.localPosition;
+			}
+		}
+
 		foreach(string line in lines)
 		{
 			if(line.Length == 0)
@@ -232,10 +210,54 @@ public class GameController : MonoBehaviour {
 			string[] splits = line.Split(new char[] {' '});
 			corrSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
 			corrSpawnData.hitTime = float.Parse(splits[0]);
+			corrSpawnData.type = Random.Range(0, corridors.Length);
+
+			DetermineHolePos(ref corrSpawnData);
+
 			corrSpawnDatas.Add(corrSpawnData);
 		}
-		
-		nextCorrSpawnTime = GetNextCorrSpawnData ().spawnTime;
+
+		nextCorrSpawn = GetNextCorrSpawnData();
+	}
+
+	void DetermineHolePos(ref CorridorSpawnData data)
+	{
+		//need to spawn beat feathers
+		int corrType = data.type;
+		int holeCount = corridorsHole[corrType];
+		GameObject corr = corridors[data.type];
+		Vector3 oriCorrPos = corr.transform.position;
+		corr.transform.position = corrSpawnPoint;
+
+		if(holeCount < 3)
+		{
+			data.holeWPos = new Vector3[holeCount];
+
+			for(int i=0; i < holeCount; i++)
+			{
+				//convert local pos to world pos
+				Vector3 worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][i]);
+				data.holeWPos[i] = worldBeatPos;
+			}
+		}
+		else if(holeCount == 3) // for now
+		{
+			data.holeWPos = new Vector3[2];
+			int first = Random.Range(0, holeCount);
+			int second = Random.Range(1, holeCount - 1);
+			second = (first + second) % holeCount;
+			
+			//first beat
+			Vector3 worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][first]);
+			data.holeWPos[0] = worldBeatPos;
+
+			//second beat
+			worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][second]);
+			data.holeWPos[1] = worldBeatPos;
+
+		}
+
+		corridors[data.type].transform.position = oriCorrPos;
 	}
 
 	void Update()
@@ -259,42 +281,26 @@ public class GameController : MonoBehaviour {
 
 	void UpdateSpawnCorr()
 	{	
-		if(time >= nextCorrSpawnTime && curCorrSpawnIndex < corrSpawnDatas.Count)
+		if(nextCorrSpawn == null)
+			return;
+
+		if(time >= nextCorrSpawn.spawnTime && curCorrSpawnIndex < corrSpawnDatas.Count)
 		{
-			int corrType = Random.Range(0, corridors.Length); // type of the corridor
+			int corrType = nextCorrSpawn.type;
 
 			GameObject corr = SpawnCorridor(corrType);
 			activeCorridors.Add(corr);
+
+			foreach(var holeWPos in nextCorrSpawn.holeWPos)
+			{
+				activeColl.Add(SpawnColl(holeWPos.x, holeWPos.y, CollSpawnData.Type.Beat));
+			}
+
 			curCorrSpawnIndex++;
-			CorridorSpawnData nextCorrSpawnData = GetNextCorrSpawnData();
-			if(nextCorrSpawnData != null)
+			nextCorrSpawn = GetNextCorrSpawnData();
+			if(nextCorrSpawn == null)
 			{
-				nextCorrSpawnTime = nextCorrSpawnData.spawnTime;
-			}
-
-			//need to spawn beat feathers
-			int holeCount = corridorsHole[corrType];
-			if(holeCount < 3)
-			{
-				for(int i=0; i < holeCount; i++)
-				{
-					//convert local pos to world pos
-					Vector3 worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][i]);
-					activeColl.Add(SpawnColl(worldBeatPos.x, worldBeatPos.y, CollSpawnData.Type.Beat));
-				}
-			}
-			else if(holeCount == 3) // for now
-			{
-				int first = Random.Range(0, holeCount);
-				int second = Random.Range(1, holeCount - 1);
-				second = (first + second) % holeCount;
-
-				//first beat
-				Vector3 worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][first]);
-				activeColl.Add(SpawnColl(worldBeatPos.x, worldBeatPos.y, CollSpawnData.Type.Beat));
-				//second beat
-				worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][second]);
-				activeColl.Add(SpawnColl(worldBeatPos.x, worldBeatPos.y, CollSpawnData.Type.Beat));
+				// TODO : mark corr as finished
 			}
 		}
 	}
@@ -303,7 +309,35 @@ public class GameController : MonoBehaviour {
 	{
 		if(time >= nextCollSpawnTime && curCollSpawnIndex < collSpawnDatas.Count)
 		{
-			activeColl.Add(SpawnColl(nextCollSpawnPos.x, nextCollSpawnPos.y, nextCollSpawnType));
+			if(nextCorrSpawn != null)
+			{
+				// if there will be two holes on incoming wall. just randomly select one hole
+				int random = Random.Range(0, nextCorrSpawn.holeWPos.Length);
+				//decide which one is the closer one to the hole
+				Vector3 diff1 = nextCorrSpawn.holeWPos[random] - player.transform.position;
+				Vector3 diff2 = nextCorrSpawn.holeWPos[random] - player2.transform.position;
+				float sqrDist1 = diff1.sqrMagnitude;
+				float sqrDist2 = diff2.sqrMagnitude;
+				float x, y;
+				if(sqrDist1 < sqrDist2)
+				{
+					x = diff1.x / 2.0f + player.transform.position.x;
+					y = diff1.y / 2.0f + player.transform.position.y;
+				}
+				else
+				{
+					x = diff2.x / 2.0f + player.transform.position.x;
+					y = diff2.y / 2.0f + player.transform.position.y;
+				}
+				//print (x + " " + y);
+
+				activeColl.Add(SpawnColl(x, y, nextCollSpawnType));
+			}
+			else
+			{
+				activeColl.Add(SpawnColl(0, 0, nextCollSpawnType));
+			}
+
 			curCollSpawnIndex++;
 			CollSpawnData nextCollSpawnData = GetNextCollSpawnData();
 			if(nextCollSpawnData != null)
@@ -485,7 +519,10 @@ public class GameController : MonoBehaviour {
 
 	public float GetNextCorrSpawnTime()
 	{
-		return nextCorrSpawnTime;
+		if(nextCorrSpawn != null)
+			return nextCorrSpawn.spawnTime;
+
+		return 0;
 	}
 
 	public void HitPlayer()
