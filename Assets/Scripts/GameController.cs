@@ -278,6 +278,8 @@ public class GameController : MonoBehaviour {
 				isFinished = true;
 		}
 
+		if (isFinished) PlayerPrefs.SetFloat("FinalTime", Time.time);
+
 		Credits ();
 	}
 
