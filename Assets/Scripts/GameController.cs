@@ -34,6 +34,9 @@ public class GameController : MonoBehaviour {
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 	private GameObject parent;
+	private bool isFinished = true;
+
+	private float possibleFinishedTime;
 
 	//next collectibles to be spawned
 	private float nextCollSpawnTime;
@@ -215,6 +218,8 @@ public class GameController : MonoBehaviour {
 		UpdateSpawnCorr();
 		UpdateSpawnCollectibles();
 		UpdateSpawnSnakes();
+
+		Credits ();
 	}
 
 	void FixedUpdate()
@@ -486,5 +491,83 @@ public class GameController : MonoBehaviour {
 	public void CancelCombo()
 	{
 		comboCount = 0;
+	}
+
+	public void Credits()
+	{
+		if (isFinished){
+			GUITexture credits = GameObject.Find("Credits/Credits").GetComponent<GUITexture>();
+			GUITexture Aiden = GameObject.Find("Credits/Aiden").GetComponent<GUITexture>();
+			GUITexture Hilman = GameObject.Find("Credits/Hilman").GetComponent<GUITexture>();
+			GUITexture Jake = GameObject.Find("Credits/Jake").GetComponent<GUITexture>();
+			GUITexture Rachel = GameObject.Find("Credits/Rachel").GetComponent<GUITexture>();
+			GUITexture Vivek = GameObject.Find("Credits/Vivek").GetComponent<GUITexture>();
+
+			float creditTime = Time.time - possibleFinishedTime;
+
+			if (creditTime < 2);
+			else if (creditTime < 3){
+				credits.guiTexture.enabled = true;
+				credits.transform.localScale = new Vector3(creditTime-2, creditTime-2, creditTime-2);
+			}
+			else if (creditTime < 4)
+			{}
+			else if (creditTime < 5)
+			{
+				credits.enabled = false;
+			}
+
+			else if (creditTime < 6)
+			{
+				credits.enabled = false;
+				Aiden.enabled = true;
+				Aiden.transform.localScale = new Vector3(creditTime-5, creditTime-5, creditTime-5);
+			}
+			else if (creditTime < 7);
+			else if (creditTime < 8)
+				Aiden.enabled = false;
+
+			else if (creditTime < 9)
+			{
+				Aiden.enabled = false;
+				Hilman.enabled = true;
+				Hilman.transform.localScale = new Vector3(creditTime-8, creditTime-8, creditTime-8);
+			}
+			else if (creditTime < 10);
+			else if (creditTime < 11)
+				Hilman.enabled = false;
+
+			else if (creditTime < 12)
+			{
+				credits.enabled = false;
+				Jake.enabled = true;
+				Jake.transform.localScale = new Vector3(creditTime-11, creditTime-11, creditTime-11);
+			}
+			else if (creditTime < 13);
+			else if (creditTime < 14)
+				Jake.enabled = false;
+
+			else if (creditTime < 15)
+			{
+				credits.enabled = false;
+				Rachel.enabled = true;
+				Rachel.transform.localScale = new Vector3(creditTime-14, creditTime-14, creditTime-14);
+			}
+			else if (creditTime < 16);
+			else if (creditTime < 17)
+				Rachel.enabled = false;
+
+			else if (creditTime < 18)
+			{
+				credits.enabled = false;
+				Vivek.enabled = true;
+				Vivek.transform.localScale = new Vector3(creditTime-17, creditTime-17, creditTime-17);
+			}
+			else if (creditTime < 19);
+			else if (creditTime < 20)
+				Vivek.enabled = false;
+		}
+		else
+			possibleFinishedTime = Time.time;
 	}
 }
