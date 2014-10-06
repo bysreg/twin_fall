@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour {
 	public int lifes;
 	public TextAsset corrSpawnDataText;
 	public TextAsset collectiblesSpawnDataText;
+	public TextAsset snakeSpawnText;
 	public AudioClip[] comboSound;
 
 	private GameObject player;
@@ -116,6 +117,7 @@ public class GameController : MonoBehaviour {
 		playerZPos = player.transform.position.z;
 
 		InitializeCorridorSpawnDatas();
+		//InitializeSnakeSpawnDatas();
 		InitializeCollectibleSpawnDatas();
 
 		trunks = new GameObject[2];
@@ -132,6 +134,11 @@ public class GameController : MonoBehaviour {
 		InitializeCombos();
 
 		InitializeHitPops();
+	}
+
+	void InitializeSnakeSpawnDatas()
+	{
+
 	}
 
 	void InitializeHitPops()
