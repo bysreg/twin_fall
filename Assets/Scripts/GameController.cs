@@ -724,6 +724,9 @@ public class GameController : MonoBehaviour {
 			else if (creditTime < 19);
 			else if (creditTime < 20)
 				Vivek.enabled = false;
+			else if (creditTime > 20)
+				Application.LoadLevel(2);
+
 		}
 		else
 			possibleFinishedTime = Time.time;
