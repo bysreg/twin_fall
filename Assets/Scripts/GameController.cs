@@ -20,11 +20,6 @@ public class GameController : MonoBehaviour {
 
 	private float time;
 
-	private GameObject[] collectibles;
-	private List<GameObject> activeColl;
-	private List<CollSpawnData> collSpawnDatas;
-	private int curOldestCollIndex;
-	private int curCollSpawnIndex;
 	private GameObject[] trunks;
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
@@ -42,12 +37,16 @@ public class GameController : MonoBehaviour {
 	private CorridorSpawnData nextCorrSpawn;
 	private readonly Vector3 corrSpawnPoint = new Vector3(0, 1, 50);
 
-	private float possibleFinishedTime;
+	//collectibles
+	private int curOldestCollIndex;
+	private int curCollSpawnIndex;
+	private GameObject[] collectibles;
+	private List<GameObject> activeColl;
+	private List<CollSpawnData> collSpawnDatas;
+	private CollSpawnData nextCollSpawn;
 
-	//next collectibles to be spawned
-	private float nextCollSpawnTime;
-	private Vector2 nextCollSpawnPos;
-	private CollSpawnData.Type nextCollSpawnType;
+	private float possibleFinishedTime;
+	
 
 	//combo system
 	private int comboCount; // dont modify combocount directly
@@ -62,6 +61,9 @@ public class GameController : MonoBehaviour {
 	private GameObject snakeInstance; // original snake gameobject to be cloned
 	private List<GameObject> activeSnakes;
 
+	//melodies
+	public AudioClip[] melodies;
+
 	public class CorridorSpawnData
 	{
 		public float spawnTime;
@@ -74,13 +76,13 @@ public class GameController : MonoBehaviour {
 	{
 		public float spawnTime;
 		public float hitTime;
-		public Vector2 position;
 		public enum Type{
 			Melody = 0,
 			Beat,
 		}
 
 		public Type type;
+		public int melodyType; // only used if type is melody
 	}
 
 	void Awake()
@@ -155,10 +157,8 @@ public class GameController : MonoBehaviour {
 				string[] splits = line.Split(new char[] {' '});
 				collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
 				collSpawnData.hitTime = float.Parse(splits[0]);
-				float x = float.Parse(splits[1]);
-				float y = float.Parse(splits[2]);
-				collSpawnData.position = new Vector2(x, y);
 				collSpawnData.type = CollSpawnData.Type.Melody;
+				collSpawnData.melodyType = int.Parse(splits[1]);
 
 				collSpawnDatas.Add(collSpawnData);
 			}
@@ -172,9 +172,7 @@ public class GameController : MonoBehaviour {
 //			print (data.spawnTime + " " + data.type);
 //		}
 
-		nextCollSpawnTime = GetNextCollSpawnData().spawnTime;
-		nextCollSpawnPos = GetNextCollSpawnData().position;
-		nextCollSpawnType = GetNextCollSpawnData().type;
+		nextCollSpawn = GetNextCollSpawnData();
 	}
 
 	void InitializeCorridorSpawnDatas()
@@ -293,7 +291,7 @@ public class GameController : MonoBehaviour {
 
 			foreach(var holeWPos in nextCorrSpawn.holeWPos)
 			{
-				activeColl.Add(SpawnColl(holeWPos.x, holeWPos.y, CollSpawnData.Type.Beat));
+				activeColl.Add(SpawnColl(holeWPos.x, holeWPos.y, CollSpawnData.Type.Beat, -1));
 			}
 
 			curCorrSpawnIndex++;
@@ -307,7 +305,7 @@ public class GameController : MonoBehaviour {
 
 	void UpdateSpawnCollectibles()
 	{
-		if(time >= nextCollSpawnTime && curCollSpawnIndex < collSpawnDatas.Count)
+		if(time >= nextCollSpawn.spawnTime && curCollSpawnIndex < collSpawnDatas.Count)
 		{
 			if(nextCorrSpawn != null)
 			{
@@ -331,20 +329,18 @@ public class GameController : MonoBehaviour {
 				}
 				//print (x + " " + y);
 
-				activeColl.Add(SpawnColl(x, y, nextCollSpawnType));
+				activeColl.Add(SpawnColl(x, y, nextCollSpawn.type, nextCollSpawn.melodyType));
 			}
 			else
 			{
-				activeColl.Add(SpawnColl(0, 0, nextCollSpawnType));
+				activeColl.Add(SpawnColl(0, 0, nextCollSpawn.type, nextCollSpawn.melodyType));
 			}
 
 			curCollSpawnIndex++;
-			CollSpawnData nextCollSpawnData = GetNextCollSpawnData();
-			if(nextCollSpawnData != null)
+			nextCollSpawn = GetNextCollSpawnData();
+			if(nextCollSpawn == null)
 			{
-				nextCollSpawnTime = nextCollSpawnData.spawnTime;
-				nextCollSpawnPos = nextCollSpawnData.position;
-				nextCollSpawnType = nextCollSpawnData.type;
+				// TODO : mark as finished
 			}
 		}
 	}
@@ -461,7 +457,7 @@ public class GameController : MonoBehaviour {
 		return corr;
 	}
 
-	GameObject SpawnColl(float x, float y, CollSpawnData.Type type)
+	GameObject SpawnColl(float x, float y, CollSpawnData.Type type, int melodyType)
 	{
 		GameObject coll = null;
 //		print ("spawn coll : " + type);
@@ -474,6 +470,8 @@ public class GameController : MonoBehaviour {
 			coll = Instantiate (collectibles[1]) as GameObject;
 		}
 		coll.transform.position = new Vector3(x, y, 50);
+		if(type == CollSpawnData.Type.Melody)
+			coll.GetComponent<CollectibleColliderCheck>().melody = melodies[melodyType];
 		return coll;
 	}
 
