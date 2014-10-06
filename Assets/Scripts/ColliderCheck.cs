@@ -42,7 +42,7 @@ public class ColliderCheck : MonoBehaviour {
 			int random = Random.Range(0, hitCorrClip.Length);
 			gameController.HitPlayer(random, other.gameObject.transform.position);
 			//print (random);
-			AudioSource.PlayClipAtPoint (hitCorrClip[random], other.gameObject.transform.position);
+			AudioSource.PlayClipAtPoint (hitCorrClip[random], other.gameObject.transform.position, 0.3f);
 			isHit = true;
 			gameController.CancelCombo();
 

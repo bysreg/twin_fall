@@ -30,6 +30,7 @@ public class GameController : MonoBehaviour {
 	private bool isFinished;
 	private bool isBeatComplete;
 	private bool isMelodyComplete;
+	private bool isSnakeComplete;
 	private float endingIdleTime = 4;
 
 	//corridors
@@ -66,6 +67,9 @@ public class GameController : MonoBehaviour {
 	private float nextSnakeSpawnTime; //time to spawn next snake
 	private GameObject snakeInstance; // original snake gameobject to be cloned
 	private List<GameObject> activeSnakes;
+	private CorridorSpawnData nextSnakeSpawn;
+	private List<CorridorSpawnData> snakeSpawnDatas;
+	private int curSnakeSpawnIndex;
 
 	//melodies
 	public AudioClip[] melodies;
@@ -107,6 +111,7 @@ public class GameController : MonoBehaviour {
 		collectibles[1] = GameObject.Find("Collectibles/BeatFeather");
 		corrSpawnDatas = new List<CorridorSpawnData> ();
 		collSpawnDatas = new List<CollSpawnData> ();
+		snakeSpawnDatas = new List<CorridorSpawnData> ();
 		activeCorridors = new List<GameObject> ();
 		activeColl = new List<GameObject>();
 		activeSnakes = new List<GameObject>();
@@ -117,7 +122,7 @@ public class GameController : MonoBehaviour {
 		playerZPos = player.transform.position.z;
 
 		InitializeCorridorSpawnDatas();
-		//InitializeSnakeSpawnDatas();
+		InitializeSnakeSpawnDatas();
 		InitializeCollectibleSpawnDatas();
 
 		trunks = new GameObject[2];
@@ -134,11 +139,6 @@ public class GameController : MonoBehaviour {
 		InitializeCombos();
 
 		InitializeHitPops();
-	}
-
-	void InitializeSnakeSpawnDatas()
-	{
-
 	}
 
 	void InitializeHitPops()
@@ -199,6 +199,28 @@ public class GameController : MonoBehaviour {
 
 		nextCollSpawn = GetNextCollSpawnData();
 	}
+
+	void InitializeSnakeSpawnDatas()
+	{
+		string spawnDataContent = snakeSpawnText.text;
+		string[] lines = spawnDataContent.Split (new char[] {'\n'});
+		float s = player.transform.position.z - corridors [0].transform.position.z;
+		float deltaTime = Mathf.Abs(s / corridorV.z); // time from spawn to reach player 
+		
+		foreach(string line in lines)
+		{
+			if(line.Length == 0)
+			{
+				continue;
+			}
+			
+			CorridorSpawnData snakeSpawnData = new CorridorSpawnData();
+			snakeSpawnData.spawnTime = float.Parse(line) - deltaTime;
+			snakeSpawnDatas.Add(snakeSpawnData);
+		}
+        
+        nextSnakeSpawn = GetNextSnakeSpawnData();
+    }
 
 	void InitializeCorridorSpawnDatas()
 	{
@@ -291,7 +313,7 @@ public class GameController : MonoBehaviour {
 		UpdateSpawnCollectibles();
 		UpdateSpawnSnakes();
 
-		if(isMelodyComplete && isBeatComplete)
+		if(isMelodyComplete && isBeatComplete && isSnakeComplete)
 		{
 			endingIdleTime -= Time.deltaTime;
 			if(endingIdleTime <= 0)
@@ -384,10 +406,19 @@ public class GameController : MonoBehaviour {
 
 	void UpdateSpawnSnakes()
 	{
-		if(time >= nextSnakeSpawnTime)
+		if(nextSnakeSpawn == null)
+			return;
+
+		if(time >= nextSnakeSpawn.spawnTime && curSnakeSpawnIndex < snakeSpawnDatas.Count)
 		{
 			activeSnakes.Add(SpawnSnake());
-			nextSnakeSpawnTime = time + Random.Range(minMaxSnakeSpawnTime.x, minMaxSnakeSpawnTime.y);
+			curSnakeSpawnIndex++;
+			//nextSnakeSpawnTime = time + Random.Range(minMaxSnakeSpawnTime.x, minMaxSnakeSpawnTime.y);
+			nextSnakeSpawn = GetNextSnakeSpawnData();
+			if(nextSnakeSpawn == null)
+			{
+				isSnakeComplete = true;
+			}
 		}
 	}
 
@@ -535,6 +566,14 @@ public class GameController : MonoBehaviour {
 	{
 		if(corrSpawnDatas.Count > curCorrSpawnIndex)
 			return corrSpawnDatas[curCorrSpawnIndex];
+
+		return null;
+	}
+
+	public CorridorSpawnData GetNextSnakeSpawnData()
+	{
+		if(snakeSpawnDatas.Count > curSnakeSpawnIndex)
+			return snakeSpawnDatas[curSnakeSpawnIndex];
 
 		return null;
 	}

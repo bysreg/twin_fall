@@ -26,7 +26,7 @@ public class CollectibleColliderCheck : MonoBehaviour {
 			if(type == GameController.CollSpawnData.Type.Beat)
 			{
 				gameController.IncComboCount(transform.position);
-				AudioSource.PlayClipAtPoint (hitCollClip, other.gameObject.transform.position);
+				//AudioSource.PlayClipAtPoint (hitCollClip, other.gameObject.transform.position);
 			}
 			else if(type == GameController.CollSpawnData.Type.Melody)
 			{
