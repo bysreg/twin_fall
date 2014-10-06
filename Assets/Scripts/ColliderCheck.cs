@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ColliderCheck : MonoBehaviour {
 
-	public AudioClip hitCorrClip;
+	public AudioClip[] hitCorrClip;
 	public AudioClip passCorrClip; // not used anymore
 
 	private GameController gameController;
@@ -29,7 +29,9 @@ public class ColliderCheck : MonoBehaviour {
 		if (other.tag == "Player") 
 		{
 			gameController.HitPlayer();
-			AudioSource.PlayClipAtPoint (hitCorrClip, other.gameObject.transform.position);
+			int random = Random.Range(0, hitCorrClip.Length);
+			//print (random);
+			AudioSource.PlayClipAtPoint (hitCorrClip[random], other.gameObject.transform.position);
 			isHit = true;
 			gameController.CancelCombo();
 		}
