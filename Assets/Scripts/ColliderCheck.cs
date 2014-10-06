@@ -5,6 +5,7 @@ public class ColliderCheck : MonoBehaviour {
 
 	public AudioClip[] hitCorrClip;
 	public AudioClip passCorrClip; // not used anymore
+	public bool hasMultipleTrigger;
 
 	private GameController gameController;
 	private float passZ; // z pos when player is considered to be successfu;; going through the corridor
@@ -12,6 +13,8 @@ public class ColliderCheck : MonoBehaviour {
 
 	private bool isHit;
 	private bool isPassClipPlayed;
+	private GameObject hitPlayer;
+	private GameObject hitPlayer2;
 
 	void Awake()
 	{
@@ -28,12 +31,31 @@ public class ColliderCheck : MonoBehaviour {
 	{
 		if (other.tag == "Player") 
 		{
-			gameController.HitPlayer();
+			if(hasMultipleTrigger)
+			{
+				if(hitPlayer != null && other.name == "Bob")
+					return;
+				if(hitPlayer2 != null && other.name == "Pew")
+					return;
+			}
+
 			int random = Random.Range(0, hitCorrClip.Length);
+			gameController.HitPlayer(random, other.gameObject.transform.position);
 			//print (random);
 			AudioSource.PlayClipAtPoint (hitCorrClip[random], other.gameObject.transform.position);
 			isHit = true;
 			gameController.CancelCombo();
+
+			if(hasMultipleTrigger)
+			{
+				if(hitPlayer == null && other.name == "Bob")
+					hitPlayer = other.gameObject;
+				if(hitPlayer2 == null && other.name == "Pew")
+					hitPlayer2 = other.gameObject;
+			}
+
+			if(hitPlayer == null)
+				hitPlayer = other.gameObject;
 		}
 	}
 
