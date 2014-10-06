@@ -69,6 +69,9 @@ public class GameController : MonoBehaviour {
 	//melodies
 	public AudioClip[] melodies;
 
+	//hit textures
+	public Fade[] hitPops;
+
 	public class CorridorSpawnData
 	{
 		public float spawnTime;
@@ -127,6 +130,16 @@ public class GameController : MonoBehaviour {
 
 		//combos
 		InitializeCombos();
+
+		InitializeHitPops();
+	}
+
+	void InitializeHitPops()
+	{
+		hitPops = new Fade[3];
+		hitPops[0] = GameObject.Find("/HitTextures/Ah").GetComponent<Fade>();
+		hitPops[1] = GameObject.Find("/HitTextures/ohoh").GetComponent<Fade>();
+		hitPops[2] = GameObject.Find("/HitTextures/Auch").GetComponent<Fade>();
 	}
 
 	void InitializeCombos()
@@ -540,10 +553,12 @@ public class GameController : MonoBehaviour {
 		return 0;
 	}
 
-	public void HitPlayer()
+	public void HitPlayer(int type, Vector3 position)
 	{
 		lifes--;
 		lifes = Mathf.Max(0, lifes);
+
+		ShowHitPop(type, position);
 	}
 
 	public GameObject GetPlayer1()
@@ -608,6 +623,25 @@ public class GameController : MonoBehaviour {
 			break;
 		}
 		combo.FadeIn();
+	}
+
+	public void ShowHitPop(int type, Vector3 position)
+	{
+		var hit = hitPops[type];
+		switch(type)
+		{
+			case 0:
+				hit.gameObject.transform.position = new Vector3(position.x, position.y, playerZPos - 0.1f);
+				break;
+			case 1:
+				hit.gameObject.transform.position = new Vector3(position.x, position.y, playerZPos - 0.2f);
+				break;
+			case 2:
+			default:
+				hit.gameObject.transform.position = new Vector3(position.x, position.y, playerZPos - 0.3f);
+                break;
+		}
+		hit.FadeIn();
 	}
 
 	public void CancelCombo()
