@@ -19,22 +19,28 @@ public class GameController : MonoBehaviour {
 	private float playerZPos;
 
 	private float time;
-	private GameObject[] corridors;
+
 	private GameObject[] collectibles;
-	private List<GameObject> activeCorridors;
 	private List<GameObject> activeColl;
-	private List<CorridorSpawnData> corrSpawnDatas;
 	private List<CollSpawnData> collSpawnDatas;
-	private int curCorrSpawnIndex;
-	private int curOldestCorrIndex;
 	private int curOldestCollIndex;
 	private int curCollSpawnIndex;
-	private float nextCorrSpawnTime;
 	private GameObject[] trunks;
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 	private GameObject parent;
 	private bool isFinished = true;
+
+	//corridors
+	private GameObject[] corridors;
+	private int[] corridorsHole;
+	private Vector3[][] corrHolePositions; // world position
+	private List<GameObject> activeCorridors;
+	private List<CorridorSpawnData> corrSpawnDatas;
+	private int curCorrSpawnIndex;
+	private int curOldestCorrIndex;
+	private float nextCorrSpawnTime;
+	private readonly Vector3 corrSpawnPoint = new Vector3(0, 1, 50);
 
 	private float possibleFinishedTime;
 
@@ -82,6 +88,7 @@ public class GameController : MonoBehaviour {
 		parent = GameObject.Find("parentObject");
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		corridors = GameObject.FindGameObjectsWithTag ("Corridor");
+		corridorsHole = new int[corridors.Length];
 		collectibles = new GameObject[2];
 		collectibles[0] = GameObject.Find("Collectibles/Feather");
 		collectibles[1] = GameObject.Find("Collectibles/BeatFeather");
@@ -110,6 +117,25 @@ public class GameController : MonoBehaviour {
 		snakeInstance = GameObject.Find("Snake");
 
 		//combos
+		InitializeCombos();
+
+		//corridor holes
+		corrHolePositions = new Vector3[corridors.Length][];
+		for(int i = 0; i < corridors.Length; i++)
+		{
+			int holeCount = corridors[i].transform.Find("Holes").childCount;
+			corridorsHole[i] = holeCount;
+			corrHolePositions[i] = new Vector3[holeCount];
+
+			for(int j = 0; j < holeCount; j++)
+			{
+				corrHolePositions[i][j] = corridors[i].transform.Find("Holes/" + (j + 1)).transform.localPosition;
+			}
+		}
+	}
+
+	void InitializeCombos()
+	{
 		comboPops = new Fade[4];
 		comboPops[0] = GameObject.Find("/ComboTextures/Good").GetComponent<Fade>();
 		comboPops[0].gameObject.SetActive(false);
@@ -120,7 +146,7 @@ public class GameController : MonoBehaviour {
 		comboPops[3] = GameObject.Find("/ComboTextures/Woo").GetComponent<Fade>();
 		comboPops[3].gameObject.SetActive(false);
 	}
-	
+
 	void InitializeCollectibleSpawnDatas()
 	{
 		float s = player.transform.position.z - corridors [0].transform.position.z;
@@ -144,35 +170,35 @@ public class GameController : MonoBehaviour {
 				float x = float.Parse(splits[1]);
 				float y = float.Parse(splits[2]);
 				collSpawnData.position = new Vector2(x, y);
-					collSpawnData.type = CollSpawnData.Type.Melody;
+				collSpawnData.type = CollSpawnData.Type.Melody;
 
 				collSpawnDatas.Add(collSpawnData);
 			}
 		}
 
-		{
-			string collectiblesSpawnDataString = corrSpawnDataText.text;
-			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
-			
-			foreach(string line in collLines)
-			{
-				if(line.Length == 0)
-				{
-					continue;
-				}
-				
-				CollSpawnData collSpawnData = new CollSpawnData();
-				string[] splits = line.Split(new char[] {' '});
-				collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
-				collSpawnData.hitTime = float.Parse(splits[0]);
-				float x = float.Parse(splits[1]);
-				float y = float.Parse(splits[2]);
-				collSpawnData.position = new Vector2(x, y);
-				collSpawnData.type = CollSpawnData.Type.Beat;
-				
-				collSpawnDatas.Add(collSpawnData);
-			}
-		}
+//		{
+//			string collectiblesSpawnDataString = corrSpawnDataText.text;
+//			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
+//			
+//			foreach(string line in collLines)
+//			{
+//				if(line.Length == 0)
+//				{
+//					continue;
+//				}
+//				
+//				CollSpawnData collSpawnData = new CollSpawnData();
+//				string[] splits = line.Split(new char[] {' '});
+//				collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
+//				collSpawnData.hitTime = float.Parse(splits[0]);
+//				float x = float.Parse(splits[1]);
+//				float y = float.Parse(splits[2]);
+//				collSpawnData.position = new Vector2(x, y);
+//				collSpawnData.type = CollSpawnData.Type.Beat;
+//				
+//				collSpawnDatas.Add(collSpawnData);
+//			}
+//		}
 
 		collSpawnDatas.Sort((x, y) => x.spawnTime.CompareTo(y.spawnTime));
 
@@ -235,14 +261,40 @@ public class GameController : MonoBehaviour {
 	{	
 		if(time >= nextCorrSpawnTime && curCorrSpawnIndex < corrSpawnDatas.Count)
 		{
-			int random = Random.Range(0, corridors.Length);
-			//print (random + " " + (corridors.Length));
-			activeCorridors.Add(SpawnCorridor(random));
+			int corrType = Random.Range(0, corridors.Length); // type of the corridor
+
+			GameObject corr = SpawnCorridor(corrType);
+			activeCorridors.Add(corr);
 			curCorrSpawnIndex++;
 			CorridorSpawnData nextCorrSpawnData = GetNextCorrSpawnData();
 			if(nextCorrSpawnData != null)
 			{
 				nextCorrSpawnTime = nextCorrSpawnData.spawnTime;
+			}
+
+			//need to spawn beat feathers
+			int holeCount = corridorsHole[corrType];
+			if(holeCount < 3)
+			{
+				for(int i=0; i < holeCount; i++)
+				{
+					//convert local pos to world pos
+					Vector3 worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][i]);
+					activeColl.Add(SpawnColl(worldBeatPos.x, worldBeatPos.y, CollSpawnData.Type.Beat));
+				}
+			}
+			else if(holeCount == 3) // for now
+			{
+				int first = Random.Range(0, holeCount);
+				int second = Random.Range(1, holeCount - 1);
+				second = (first + second) % holeCount;
+
+				//first beat
+				Vector3 worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][first]);
+				activeColl.Add(SpawnColl(worldBeatPos.x, worldBeatPos.y, CollSpawnData.Type.Beat));
+				//second beat
+				worldBeatPos = corr.transform.TransformPoint(corrHolePositions[corrType][second]);
+				activeColl.Add(SpawnColl(worldBeatPos.x, worldBeatPos.y, CollSpawnData.Type.Beat));
 			}
 		}
 	}
@@ -371,7 +423,7 @@ public class GameController : MonoBehaviour {
 	GameObject SpawnCorridor(int type)
 	{
 		GameObject corr = Instantiate (corridors [type]) as GameObject;
-		corr.transform.position = new Vector3(0, 1, 50);
+		corr.transform.position = corrSpawnPoint;
 		return corr;
 	}
 
