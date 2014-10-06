@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour {
 	//combo system
 	private int comboCount; // dont modify combocount directly
 	private bool isPrevHit;
-	private GameObject[] comboPops;
+	private Fade[] comboPops;
 
 	//snakes
 	public float snakeMinTime; // minimum time to spawn the snake for the first time
@@ -106,11 +106,15 @@ public class GameController : MonoBehaviour {
 		snakeInstance = GameObject.Find("Snake");
 
 		//combos
-		comboPops = new GameObject[4];
-		comboPops[0] = GameObject.Find("/ComboTextures/Good");
-		comboPops[1] = GameObject.Find("/ComboTextures/Cool");
-		comboPops[2] = GameObject.Find("/ComboTextures/Yoho");
-		comboPops[3] = GameObject.Find("/ComboTextures/Woo");
+		comboPops = new Fade[4];
+		comboPops[0] = GameObject.Find("/ComboTextures/Good").GetComponent<Fade>();
+		comboPops[0].gameObject.SetActive(false);
+		comboPops[1] = GameObject.Find("/ComboTextures/Cool").GetComponent<Fade>();
+		comboPops[1].gameObject.SetActive(false);
+		comboPops[2] = GameObject.Find("/ComboTextures/Yoho").GetComponent<Fade>();
+		comboPops[2].gameObject.SetActive(false);
+		comboPops[3] = GameObject.Find("/ComboTextures/Woo").GetComponent<Fade>();
+		comboPops[3].gameObject.SetActive(false);
 	}
 	
 	void InitializeCollectibleSpawnDatas()
@@ -469,14 +473,14 @@ public class GameController : MonoBehaviour {
 		int type = comboCount <= comboSound.Length ? comboCount - 1 : comboSound.Length - 1;
 		AudioSource.PlayClipAtPoint(comboSound[type], mainCam.transform.position);
 		//display combo text
-		//ShowComboPop(type, position); fixme
+		ShowComboPop(type, position);
 	}
 
 	public void ShowComboPop(int type, Vector3 position)
 	{
-		comboPops[type].SetActive(true);
-		comboPops[type].transform.position = position;
-		//comboPops[type].
+		comboPops[type].gameObject.SetActive(true);
+		comboPops[type].gameObject.transform.position = position;
+		comboPops[type].FadeIn();
 	}
 
 	public void CancelCombo()
