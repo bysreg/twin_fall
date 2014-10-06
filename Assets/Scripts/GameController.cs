@@ -11,7 +11,6 @@ public class GameController : MonoBehaviour {
 	public int lifes;
 	public TextAsset corrSpawnDataText;
 	public TextAsset collectiblesSpawnDataText;
-	public TextAsset beatCollectiblesSpawnDataText;
 	public AudioClip[] comboSound;
 
 	private GameObject player;
@@ -150,7 +149,7 @@ public class GameController : MonoBehaviour {
 		}
 
 		{
-			string collectiblesSpawnDataString = beatCollectiblesSpawnDataText.text;
+			string collectiblesSpawnDataString = corrSpawnDataText.text;
 			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
 			
 			foreach(string line in collLines)
@@ -202,8 +201,9 @@ public class GameController : MonoBehaviour {
 			}
 			
 			CorridorSpawnData corrSpawnData = new CorridorSpawnData();
-			corrSpawnData.spawnTime = float.Parse(line) - deltaTime;
-			corrSpawnData.hitTime = float.Parse(line);
+			string[] splits = line.Split(new char[] {' '});
+			corrSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
+			corrSpawnData.hitTime = float.Parse(splits[0]);
 			corrSpawnDatas.Add(corrSpawnData);
 		}
 		
