@@ -34,7 +34,7 @@ public class GameController : MonoBehaviour {
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 	private GameObject parent;
-	private bool isFinished = true;
+	private bool isFinished;
 
 	private float possibleFinishedTime;
 
@@ -130,25 +130,24 @@ public class GameController : MonoBehaviour {
 			string collectiblesSpawnDataString = collectiblesSpawnDataText.text;
 			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
 
-
-		foreach(string line in collLines)
-		{
-			if(line.Length == 0)
+			foreach(string line in collLines)
 			{
-				continue;
+				if(line.Length == 0)
+				{
+					continue;
+				}
+
+				CollSpawnData collSpawnData = new CollSpawnData();
+				string[] splits = line.Split(new char[] {' '});
+				collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
+				collSpawnData.hitTime = float.Parse(splits[0]);
+				float x = float.Parse(splits[1]);
+				float y = float.Parse(splits[2]);
+				collSpawnData.position = new Vector2(x, y);
+					collSpawnData.type = CollSpawnData.Type.Melody;
+
+				collSpawnDatas.Add(collSpawnData);
 			}
-
-			CollSpawnData collSpawnData = new CollSpawnData();
-			string[] splits = line.Split(new char[] {' '});
-			collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
-			collSpawnData.hitTime = float.Parse(splits[0]);
-			float x = float.Parse(splits[1]);
-			float y = float.Parse(splits[2]);
-			collSpawnData.position = new Vector2(x, y);
-				collSpawnData.type = CollSpawnData.Type.Melody;
-
-			collSpawnDatas.Add(collSpawnData);
-		}
 		}
 
 		{
