@@ -34,7 +34,7 @@ public class GameController : MonoBehaviour {
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 	private GameObject parent;
-	private bool isFinished;
+	private bool isFinished = true;
 
 	private float possibleFinishedTime;
 
