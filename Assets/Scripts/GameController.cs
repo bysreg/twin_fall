@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour {
 	private List<CorridorSpawnData> corrSpawnDatas;
 	private int curCorrSpawnIndex;
 	private int curOldestCorrIndex;
-	private float nextCorrSpawnTime;
+	private CorridorSpawnData nextCorrSpawn;
 	private readonly Vector3 corrSpawnPoint = new Vector3(0, 1, 50);
 
 	private float possibleFinishedTime;
@@ -66,6 +66,7 @@ public class GameController : MonoBehaviour {
 	{
 		public float spawnTime;
 		public float hitTime;
+		public int type;
 	}
 
 	public class CollSpawnData
@@ -232,10 +233,11 @@ public class GameController : MonoBehaviour {
 			string[] splits = line.Split(new char[] {' '});
 			corrSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
 			corrSpawnData.hitTime = float.Parse(splits[0]);
+			corrSpawnData.type = Random.Range(0, corridors.Length);
 			corrSpawnDatas.Add(corrSpawnData);
 		}
-		
-		nextCorrSpawnTime = GetNextCorrSpawnData ().spawnTime;
+
+		nextCorrSpawn = GetNextCorrSpawnData();
 	}
 
 	void Update()
@@ -259,17 +261,17 @@ public class GameController : MonoBehaviour {
 
 	void UpdateSpawnCorr()
 	{	
-		if(time >= nextCorrSpawnTime && curCorrSpawnIndex < corrSpawnDatas.Count)
+		if(time >= nextCorrSpawn.spawnTime && curCorrSpawnIndex < corrSpawnDatas.Count)
 		{
-			int corrType = Random.Range(0, corridors.Length); // type of the corridor
+			int corrType = nextCorrSpawn.type;
 
 			GameObject corr = SpawnCorridor(corrType);
 			activeCorridors.Add(corr);
 			curCorrSpawnIndex++;
-			CorridorSpawnData nextCorrSpawnData = GetNextCorrSpawnData();
-			if(nextCorrSpawnData != null)
+			nextCorrSpawn = GetNextCorrSpawnData();
+			if(nextCorrSpawn == null)
 			{
-				nextCorrSpawnTime = nextCorrSpawnData.spawnTime;
+				// TODO : mark corr as finished
 			}
 
 			//need to spawn beat feathers
@@ -303,6 +305,8 @@ public class GameController : MonoBehaviour {
 	{
 		if(time >= nextCollSpawnTime && curCollSpawnIndex < collSpawnDatas.Count)
 		{
+
+
 			activeColl.Add(SpawnColl(nextCollSpawnPos.x, nextCollSpawnPos.y, nextCollSpawnType));
 			curCollSpawnIndex++;
 			CollSpawnData nextCollSpawnData = GetNextCollSpawnData();
@@ -485,7 +489,10 @@ public class GameController : MonoBehaviour {
 
 	public float GetNextCorrSpawnTime()
 	{
-		return nextCorrSpawnTime;
+		if(nextCorrSpawn != null)
+			return nextCorrSpawn.spawnTime;
+
+		return 0;
 	}
 
 	public void HitPlayer()
