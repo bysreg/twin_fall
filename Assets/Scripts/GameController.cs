@@ -29,7 +29,7 @@ public class GameController : MonoBehaviour {
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 	private GameObject parent;
-	private bool isFinished = true;
+	private bool isFinished;
 
 	//corridors
 	private GameObject[] corridors;
