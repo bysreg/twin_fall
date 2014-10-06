@@ -135,6 +135,7 @@ public class Player : MonoBehaviour {
 		if (leapController.proximity < 1)
 		{
 			parentObject.SetActive(true);
+			//parentObject.audio.Play();
 			transform.parent = parentObject.transform;
 
 			transform.localPosition = (index == 0) ? transform.parent.forward*0.3f: -transform.parent.forward*0.3f;
