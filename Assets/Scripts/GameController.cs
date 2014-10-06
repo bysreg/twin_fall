@@ -24,7 +24,12 @@ public class GameController : MonoBehaviour {
 	private GameObject curTrunk;
 	private GameObject nextTrunk;
 	private GameObject parent;
+
+	//ending indicator
 	private bool isFinished;
+	private bool isBeatComplete;
+	private bool isMelodyComplete;
+	private float endingIdleTime = 4;
 
 	//corridors
 	private GameObject[] corridors;
@@ -266,6 +271,13 @@ public class GameController : MonoBehaviour {
 		UpdateSpawnCollectibles();
 		UpdateSpawnSnakes();
 
+		if(isMelodyComplete && isBeatComplete)
+		{
+			endingIdleTime -= Time.deltaTime;
+			if(endingIdleTime <= 0)
+				isFinished = true;
+		}
+
 		Credits ();
 	}
 
@@ -298,13 +310,16 @@ public class GameController : MonoBehaviour {
 			nextCorrSpawn = GetNextCorrSpawnData();
 			if(nextCorrSpawn == null)
 			{
-				// TODO : mark corr as finished
+				isBeatComplete = true;
 			}
 		}
 	}
 
 	void UpdateSpawnCollectibles()
 	{
+		if(nextCollSpawn == null)
+			return;
+
 		if(time >= nextCollSpawn.spawnTime && curCollSpawnIndex < collSpawnDatas.Count)
 		{
 			if(nextCorrSpawn != null)
@@ -340,7 +355,7 @@ public class GameController : MonoBehaviour {
 			nextCollSpawn = GetNextCollSpawnData();
 			if(nextCollSpawn == null)
 			{
-				// TODO : mark as finished
+				isMelodyComplete = true;
 			}
 		}
 	}

@@ -15,7 +15,7 @@ public class Fade : MonoBehaviour {
 	private float velo;
 	private int inc;
 	private float idleTime;
-	private const float FADEOUT_TIME = 2.0f;
+	public float fadeoutTime = 2.0f;
 	
 	void Awake () {
 		matCol = renderer.material.color;
@@ -52,11 +52,11 @@ public class Fade : MonoBehaviour {
 				}
 			}
 		}
-		else if(idleTime <= FADEOUT_TIME)
+		else if(idleTime <= fadeoutTime)
 		{
 			idleTime += Time.deltaTime;
 
-			if(idleTime > FADEOUT_TIME)
+			if(idleTime > fadeoutTime)
 			{
 				FadeOut();
 			}
