@@ -11,12 +11,12 @@ public class GameController : MonoBehaviour {
 	public int lifes;
 	public TextAsset corrSpawnDataText;
 	public TextAsset collectiblesSpawnDataText;
-	public TextAsset beatCollectiblesSpawnDataText;
 	public AudioClip[] comboSound;
 
 	private GameObject player;
 	private GameObject player2;
 	private GameObject mainCam;
+	private float playerZPos;
 
 	private float time;
 	private GameObject[] corridors;
@@ -94,6 +94,7 @@ public class GameController : MonoBehaviour {
 		player.transform.position = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 		player2.transform.position = new Vector3 (mainCam.transform.position.x + 3, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
 		parent.transform.position = new Vector3 (mainCam.transform.position.x + 3, mainCam.transform.position.y, mainCam.transform.position.z + playerZDistanceFromCamera);
+		playerZPos = player.transform.position.z;
 
 		InitializeCorridorSpawnDatas();
 		InitializeCollectibleSpawnDatas();
@@ -151,7 +152,7 @@ public class GameController : MonoBehaviour {
 		}
 
 		{
-			string collectiblesSpawnDataString = beatCollectiblesSpawnDataText.text;
+			string collectiblesSpawnDataString = corrSpawnDataText.text;
 			string[] collLines = collectiblesSpawnDataString.Split(new char[] {'\n'});
 			
 			foreach(string line in collLines)
@@ -203,8 +204,9 @@ public class GameController : MonoBehaviour {
 			}
 			
 			CorridorSpawnData corrSpawnData = new CorridorSpawnData();
-			corrSpawnData.spawnTime = float.Parse(line) - deltaTime;
-			corrSpawnData.hitTime = float.Parse(line);
+			string[] splits = line.Split(new char[] {' '});
+			corrSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
+			corrSpawnData.hitTime = float.Parse(splits[0]);
 			corrSpawnDatas.Add(corrSpawnData);
 		}
 		
@@ -483,9 +485,25 @@ public class GameController : MonoBehaviour {
 
 	public void ShowComboPop(int type, Vector3 position)
 	{
-		comboPops[type].gameObject.SetActive(true);
-		comboPops[type].gameObject.transform.position = position;
-		comboPops[type].FadeIn();
+		var combo = comboPops[type];
+		combo.gameObject.SetActive(true);
+		switch(type)
+		{
+		case 0:
+			combo.gameObject.transform.position = new Vector3(position.x, position.y, playerZPos - 0.1f);
+			break;
+		case 1:
+			combo.gameObject.transform.position = new Vector3(position.x, position.y, playerZPos - 0.2f);
+			break;
+		case 2:
+			combo.gameObject.transform.position = new Vector3(position.x, position.y, playerZPos - 0.3f);
+			break;
+		case 3:
+		default:
+			combo.gameObject.transform.position = new Vector3(position.x, position.y, playerZPos - 0.4f);
+			break;
+		}
+		combo.FadeIn();
 	}
 
 	public void CancelCombo()

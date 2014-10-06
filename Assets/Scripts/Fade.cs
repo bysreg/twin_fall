@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Fade : MonoBehaviour {
 
-	public int fadeSpeed;
+	public int fadeInSpeed;
+	public int fadeOutSpeed;
 
 	private bool isDone = true;
 	private Color matCol;
@@ -21,34 +22,43 @@ public class Fade : MonoBehaviour {
 	}
 
 	void Update () {
-
 		if (!isDone)
 		{
-			alpha = renderer.material.color.a + Time.deltaTime * fadeSpeed * inc;
-			newColor = new Color(matCol.r, matCol.g, matCol.b, alpha);
-			renderer.material.SetColor("_Color", newColor);
-
 			if(inc == 1)
 			{
+				alpha = renderer.material.color.a + Time.deltaTime * fadeInSpeed * inc;
+				newColor = new Color(matCol.r, matCol.g, matCol.b, alpha);
+				renderer.material.SetColor("_Color", newColor);
 				isDone = (alpha >= 1);
 			}
 			else if(inc == -1)
 			{
+				alpha = renderer.material.color.a + Time.deltaTime * fadeOutSpeed * inc;
+				newColor = new Color(matCol.r, matCol.g, matCol.b, alpha);
+				renderer.material.SetColor("_Color", newColor);
 				isDone = (alpha <= 0);
 			}
 
 			if(isDone)
 			{
-				idleTime = 0;
+				if(inc == 1)
+				{
+					idleTime = 0;
+					alpha = 1;
+				}
+				else
+				{
+					alpha = 0;
+				}
 			}
 		}
-		else
+		else if(idleTime <= FADEOUT_TIME)
 		{
 			idleTime += Time.deltaTime;
 
 			if(idleTime > FADEOUT_TIME)
 			{
-
+				FadeOut();
 			}
 		}
 	}
@@ -58,6 +68,7 @@ public class Fade : MonoBehaviour {
 		targetAlpha = 1f;
 		isDone = false;
 		inc = 1;
+		idleTime = 0;
 	}
 
 	public void FadeOut()
@@ -65,5 +76,6 @@ public class Fade : MonoBehaviour {
 		targetAlpha = 0f;
 		isDone = false;
 		inc = -1;
+		idleTime = 0;
 	}
 }
