@@ -22,6 +22,8 @@ public class Player : MonoBehaviour {
 	private Transform model;
 	private Transform combinedModel;
 
+	private bool firstTime = true;
+
 	private Animator animator;
 
 	//private float revoVel;
@@ -135,6 +137,10 @@ public class Player : MonoBehaviour {
 		if (leapController.proximity < 1)
 		{
 			parentObject.SetActive(true);
+			if (firstTime){
+				parentObject.audio.Play();
+				firstTime = false;
+			}
 			transform.parent = parentObject.transform;
 
 			transform.localPosition = (index == 0) ? transform.parent.forward*0.3f: -transform.parent.forward*0.3f;
@@ -143,6 +149,7 @@ public class Player : MonoBehaviour {
 		}
 		else if (leapController.proximity > 2){
 			animator.SetBool("isCombined", false);
+			firstTime = true;
 			model.localScale = new Vector3(15f, 15f, 15f);
 			combinedModel.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 			transform.parent = null;
