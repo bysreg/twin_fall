@@ -563,6 +563,7 @@ public class GameController : MonoBehaviour {
 	public void IncComboCount(Vector3 position)
 	{
 		comboCount++;
+		ChangeComboNumber (comboCount);
 
 		//play combo sound
 		int type = comboCount <= comboSound.Length ? comboCount - 1 : comboSound.Length - 1;
@@ -597,6 +598,94 @@ public class GameController : MonoBehaviour {
 	public void CancelCombo()
 	{
 		comboCount = 0;
+		ChangeComboNumber (comboCount);
+	}
+
+	public void ChangeComboNumber(int combo)
+	{
+		if (combo < 10) {
+			blitNumber (combo, 1);
+		}
+		else{
+			blitNumber(combo/10, 1);
+			blitNumber (combo%10, 2);
+		}
+	}
+
+	public void blitNumber(int digit, int position)
+	{
+		GUITexture zero = GameObject.Find("ComboTextures/0").GetComponent<GUITexture>();
+		GUITexture one = GameObject.Find("ComboTextures/1").GetComponent<GUITexture>();
+		if (position == 1){
+			switch(digit)
+			{
+				case 0:
+					zero.texture = Resources.Load ("0") as Texture;
+					break;
+				case 1:
+					zero.texture = Resources.Load ("1") as Texture;
+					break;
+				case 2:
+					zero.texture = Resources.Load ("2") as Texture;
+					break;
+				case 3:
+					zero.texture = Resources.Load ("3") as Texture;
+					break;
+				case 4:
+					zero.texture = Resources.Load ("4") as Texture;
+					break;
+				case 5:
+					zero.texture = Resources.Load ("5") as Texture;
+					break;
+				case 6:
+					zero.texture = Resources.Load ("6") as Texture;
+					break;
+				case 7:
+					zero.texture = Resources.Load ("7") as Texture;
+					break;
+				case 8:
+					zero.texture = Resources.Load ("8") as Texture;
+					break;
+				case 9:
+					zero.texture = Resources.Load ("9") as Texture;
+					break;
+			}
+		}
+		else if (position == 2){
+			switch(digit)
+			{
+			case 0:
+				one.texture = Resources.Load ("0") as Texture;
+				break;
+			case 1:
+				one.texture = Resources.Load ("1") as Texture;
+				break;
+			case 2:
+				one.texture = Resources.Load ("2") as Texture;
+				break;
+			case 3:
+				one.texture = Resources.Load ("3") as Texture;
+				break;
+			case 4:
+				one.texture = Resources.Load ("4") as Texture;
+				break;
+			case 5:
+				one.texture = Resources.Load ("5") as Texture;
+				break;
+			case 6:
+				one.texture = Resources.Load ("6") as Texture;
+				break;
+			case 7:
+				one.texture = Resources.Load ("7") as Texture;
+				break;
+			case 8:
+				one.texture = Resources.Load ("8") as Texture;
+				break;
+			case 9:
+				one.texture = Resources.Load ("9") as Texture;
+				break;
+			}
+		}
 	}
 
 	public void Credits()
