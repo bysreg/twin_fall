@@ -31,7 +31,7 @@ public class ColliderCheck : MonoBehaviour {
 	{
 		if (other.tag == "Player") 
 		{
-			print (this.name + " " + other.name);
+			//print (this.name + " " + other.name);
 			if(hasMultipleTrigger)
 			{
 				if(hitPlayer != null && other.name == "Bob")
