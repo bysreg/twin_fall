@@ -180,7 +180,8 @@ public class GameController : MonoBehaviour {
 
 				CollSpawnData collSpawnData = new CollSpawnData();
 				string[] splits = line.Split(new char[] {' '});
-				collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
+				float hardcode = 0.2f;
+				collSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime - hardcode;
 				collSpawnData.hitTime = float.Parse(splits[0]);
 				collSpawnData.type = CollSpawnData.Type.Melody;
 				collSpawnData.melodyType = int.Parse(splits[1]);
