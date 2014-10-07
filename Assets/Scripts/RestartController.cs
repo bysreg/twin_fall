@@ -8,6 +8,7 @@ public class RestartController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		time = PlayerPrefs.GetFloat ("FinalTime");
+		Debug.Log (time);
 		SetTime (time);
 	}
 	
