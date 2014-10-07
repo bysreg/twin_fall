@@ -31,6 +31,7 @@ public class ColliderCheck : MonoBehaviour {
 	{
 		if (other.tag == "Player") 
 		{
+			print (this.name + " " + other.name);
 			if(hasMultipleTrigger)
 			{
 				if(hitPlayer != null && other.name == "Bob")
@@ -53,9 +54,6 @@ public class ColliderCheck : MonoBehaviour {
 				if(hitPlayer2 == null && other.name == "Pew")
 					hitPlayer2 = other.gameObject;
 			}
-
-			if(hitPlayer == null)
-				hitPlayer = other.gameObject;
 		}
 	}
 
