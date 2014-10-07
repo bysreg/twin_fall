@@ -603,7 +603,7 @@ public class GameController : MonoBehaviour {
 		lifes--;
 		lifes = Mathf.Max(0, lifes);
 		if (lifes == 0){
-			PlayerPrefs.SetFloat("FinalTime", Time.time);
+			PlayerPrefs.SetFloat("FinalTime", Time.timeSinceLevelLoad);
 			Application.LoadLevel (3);
 		}
 
