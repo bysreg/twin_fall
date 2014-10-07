@@ -321,8 +321,6 @@ public class GameController : MonoBehaviour {
 				isFinished = true;
 		}
 
-		if (isFinished) PlayerPrefs.SetFloat("FinalTime", Time.time);
-
 		Credits ();
 	}
 
@@ -604,6 +602,10 @@ public class GameController : MonoBehaviour {
 	{
 		lifes--;
 		lifes = Mathf.Max(0, lifes);
+		if (lifes == 0){
+			PlayerPrefs.SetFloat("FinalTime", Time.time);
+			Application.LoadLevel (3);
+		}
 
 		ShowHitPop(type, position);
 	}
