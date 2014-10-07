@@ -254,7 +254,8 @@ public class GameController : MonoBehaviour {
 			
 			CorridorSpawnData corrSpawnData = new CorridorSpawnData();
 			string[] splits = line.Split(new char[] {' '});
-			corrSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime;
+			float harcode = 0.2f;
+			corrSpawnData.spawnTime = float.Parse(splits[0]) - deltaTime - harcode;
 			corrSpawnData.hitTime = float.Parse(splits[0]);
 			corrSpawnData.type = Random.Range(0, corridors.Length);
 
